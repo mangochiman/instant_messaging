@@ -79,11 +79,41 @@ router.post('/create_group', function (req, res, next) {
 
 });
 
+var Promise = require('bluebird');
+
 router.get('/add_member', function (req, res, next) {
+
     knex('group').then(function (groups) {
-        res.render('add_member', {groups: groups});
+        var promises = groups.map(function (group) {
+            group_id = group.group_id;
+            return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
+                    .then(function (user_count) {
+                        group['members_count'] = user_count[0]["user_id"];
+                        return group;
+                    })
+        })
+
+        var promises2 = groups.map(function (group) {
+            group_id = group.group_id;
+            return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
+                group['group_members'] = users;
+                return group
+            })
+        })
+
+        return Promise.all(promises2)
+    }).then(function (data) {
+        res.render('add_member', {groups: data});
     });
 });
+
+function groupMembers(groupID) {
+
+    return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: groupID}).then(function (users) {
+        return (users);
+    })
+
+}
 
 router.post('/create_member', function (req, res, next) {
     var password = req.body.password;
