@@ -86,7 +86,27 @@ router.get('/add_member', function (req, res, next) {
 });
 
 router.post('/create_member', function (req, res, next) {
-    res.render('add_member', {title: 'Add Member'});
+    var password = req.body.password;
+    var password_hash = bcrypt.hashSync(password);
+    var first_name = req.body.first_name;
+    var last_name = req.body.last_name;
+    var username = req.body.username;
+    var group_id = req.body.group_id;
+
+    new User({
+        fname: first_name,
+        lname: last_name,
+        username: username,
+        password: password_hash
+    }).save().then(function (user) {
+        user_id = user.id;
+        new GroupMemberShip({
+            group_id: group_id,
+            user_id: user_id,
+        }).save().then(function (group_member_ship) {
+            res.redirect('/add_member');
+        });
+    });
 });
 
 module.exports = router;
