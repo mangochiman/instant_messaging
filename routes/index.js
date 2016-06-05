@@ -80,7 +80,9 @@ router.post('/create_group', function (req, res, next) {
 });
 
 router.get('/add_member', function (req, res, next) {
-    res.render('add_member', {title: 'Add Member'});
+    knex('group').then(function (groups) {
+        res.render('add_member', {groups: groups});
+    });
 });
 
 router.post('/create_member', function (req, res, next) {
