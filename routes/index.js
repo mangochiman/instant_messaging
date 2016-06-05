@@ -55,4 +55,12 @@ router.get('/sign_out', function (req, res, next) {
     }
 });
 
+router.get('/add_group', function (req, res, next) {
+    res.render('add_group', {title: 'Add Group'});
+});
+
+router.get('/add_member', function (req, res, next) {
+    res.render('add_member', {title: 'Add Member'});
+});
+
 module.exports = router;
