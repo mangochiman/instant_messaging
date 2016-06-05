@@ -73,7 +73,9 @@ app.use('/process_authentication', users);
 app.use('/sign_out', routes);
 
 app.use('/add_group', routes);
+app.use('/create_group', routes);
 app.use('/add_member', routes);
+app.use('/create_member', routes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -6,6 +6,11 @@ var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
 var loadUser = require('../force_login');
 
+User = model.User;
+Group = model.Group;
+ChatDetails = model.ChatDetails;
+GroupMemberShip = model.GroupMemberShip;
+
 /* GET home page. */
 router.get('/', loadUser, function (req, res, next) {
     res.redirect('/index');
@@ -56,10 +61,29 @@ router.get('/sign_out', function (req, res, next) {
 });
 
 router.get('/add_group', function (req, res, next) {
-    res.render('add_group', {title: 'Add Group'});
+    knex('group').then(function (groups) {
+        res.render('add_group', {groups: groups});
+    });
+});
+
+router.post('/create_group', function (req, res, next) {
+    console.log(req.body)
+    group_name = req.body.group_name;
+    group_description = req.body.group_description; //Add group_description later;
+
+    new Group({
+        name: group_name,
+    }).save().then(function (group) {
+        res.redirect("/add_group");
+    })
+
 });
 
 router.get('/add_member', function (req, res, next) {
+    res.render('add_member', {title: 'Add Member'});
+});
+
+router.post('/create_member', function (req, res, next) {
     res.render('add_member', {title: 'Add Member'});
 });
 

@@ -24,6 +24,7 @@
         <link href="assets/css/layout2.css" rel="stylesheet" />
         <link href="assets/plugins/flot/examples/examples.css" rel="stylesheet" />
         <link rel="stylesheet" href="assets/plugins/timeline/timeline.css" />
+        <link rel="stylesheet" href="assets/plugins/validationengine/css/validationEngine.jquery.css" />
         <!-- END PAGE LEVEL  STYLES -->
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -139,71 +140,33 @@
 
 
                     <li class="panel active">
-                        <a href="index.html" >
+                        <a href="/" >
                             <i class="icon-table"></i> Dashboard
 
 
                         </a>                   
                     </li>
 
-
-
+                    <% for (var group in groups){ %>
                     <li class="panel ">
-                        <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" data-target="#component-nav">
-                            <i class="icon-tasks"> </i> Group 1   
+                        <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" data-target="#component-nav-<%= groups[group]['group_id'] %>">
+                            <i class="icon-tasks"> </i> <%= groups[group]["name"] %> 
 
                             <span class="pull-right">
                                 <i class="icon-angle-left"></i>
                             </span>
-                            &nbsp; <span class="label label-success">8</span>&nbsp;
+                            &nbsp; <span class="label label-success">00</span>&nbsp;
                         </a>
-                        <ul class="collapse" id="component-nav">
+                        <ul class="collapse" id="component-nav-<%= groups[group]['group_id'] %>">
 
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 1 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 2 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 3 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 4 </a></li>
+                            <li class=""><a href="#"><i class="icon-user"></i> Member 1 </a></li>
+                            <li class=""><a href="#"><i class="icon-user"></i> Member 2 </a></li>
+                            <li class=""><a href="#"><i class="icon-user"></i> Member 3 </a></li>
+                            <li class=""><a href="#"><i class="icon-user"></i> Member 4 </a></li>
 
                         </ul>
                     </li>
-
-                    <li class="panel ">
-                        <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" data-target="#component-nav">
-                            <i class="icon-tasks"> </i> Group 3   
-
-                            <span class="pull-right">
-                                <i class="icon-angle-left"></i>
-                            </span>
-                            &nbsp; <span class="label label-warning">12</span>&nbsp;
-                        </a>
-                        <ul class="collapse" id="component-nav">
-
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 1 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 2 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 3 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 4 </a></li>
-
-                        </ul>
-                    </li>
-
-                    <li class="panel ">
-                        <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" data-target="#component-nav">
-                            <i class="icon-tasks"> </i> Group 2   
-
-                            <span class="pull-right">
-                                <i class="icon-angle-left"></i>
-                            </span>
-                            &nbsp; <span class="label label-danger">6</span>&nbsp;
-                        </a>
-                        <ul class="collapse" id="component-nav">
-
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 1 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 2 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 3 </a></li>
-                            <li class=""><a href="button.html"><i class="icon-angle-right"></i> Member 4 </a></li>
-
-                        </ul>
-                    </li>
+                    <% } %>
 
                 </ul>
 
@@ -226,24 +189,24 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="box">
-                       
+
                                 <div class="accordion-body collapse in body" id="collapseOne">
-                                    <form id="block-validate" class="form-horizontal" action="#" novalidate="novalidate">
+                                    <form class="form-horizontal" action="/create_group" method="POST">
 
                                         <div class="form-group">
                                             <label class="control-label col-lg-4">Group Name</label>
                                             <div class="col-lg-4">
-                                                <input type="text" class="form-control" name="required2" id="required2">
+                                                <input type="text" class="form-control" name="group_name" required="true">
                                             </div>
                                         </div>
-                                       
+
                                         <div class="form-group">
                                             <label class="control-label col-lg-4">Group Description</label>
                                             <div class="col-lg-4">
-                                                <input type="text" class="form-control" name="required2" id="required2">
+                                                <input type="text" class="form-control" name="group_description">
                                             </div>
                                         </div>
-                                        
+
                                         <div style="text-align:center;" class="form-actions no-margin-bottom">
                                             <input type="submit" class="btn btn-primary btn-lg " value="Submit">
                                         </div>
@@ -299,6 +262,16 @@
         <script  src="assets/plugins/flot/jquery.flot.stack.js"></script>
         <script src="assets/js/for_index.js"></script>
 
+        <script src="assets/plugins/validationengine/js/jquery.validationEngine.js"></script>
+        <script src="assets/plugins/validationengine/js/languages/jquery.validationEngine-en.js"></script>
+        <script src="assets/plugins/jquery-validation-1.11.1/dist/jquery.validate.min.js"></script>
+        <script src="assets/js/validationInit.js"></script>
+
+        <script>
+            $(function () {
+                formValidation();
+            });
+        </script>
         <!-- END PAGE LEVEL SCRIPTS -->
 
 
