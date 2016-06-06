@@ -30,6 +30,9 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
+        <script src="assets/plugins/jquery-2.0.3.min.js"></script>
+        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
         <script src="javascripts/socket.io.js"></script>
         <script>
             var socket = io.connect('http://0.0.0.0:2000');
@@ -39,7 +42,28 @@
 
             // listener, whenever the server emits 'updatechat', this updates the chat body
             socket.on('updatechat', function (username, data) {
-                $('#conversation').append('<b>' + username + ':</b> ' + data + '<br>');
+                html  = '<ul class="chat">';
+                html += '<li class="left clearfix">';
+                html += '<span class="chat-img pull-left">';
+                html += '<img src="assets/img/1.png" alt="User Avatar" class="img-circle" />';
+                html += '</span>';
+                html += '<div class="chat-body clearfix">';
+                html += '<div class="header">';
+                html += '<strong class="primary-font ">' + username + '</strong>';
+                html += '<small class="pull-right text-muted label label-danger">';
+                html += '<i class="icon-time"></i> 12 mins ago';
+                html += '</small>';
+                html += '</div>';
+                html += '<br />';
+                html += '<p>';
+                html += data;
+                html += '</p>';
+                html += '</div>';
+                html += '</li>';
+                html += '</ul>';
+   
+                $('.panel-body').append(html);
+                
             });
 
             // listener, whenever the server emits 'updateusers', this updates the username list
@@ -53,18 +77,18 @@
             // on load of page
             $(function () {
                 // when the client clicks SEND
-                $('#datasend').click(function () {
-                    var message = $('#data').val();
-                    $('#data').val('');
+                $('#btn-chat').click(function () {
+                    var message = $('#btn-input').val();
+                    $('#btn-input').val('');
                     // tell server to execute 'sendchat' and send along one parameter
                     socket.emit('sendchat', message);
                 });
 
                 // when the client hits ENTER on their keyboard
-                $('#data').keypress(function (e) {
+                $('#btn-input').keypress(function (e) {
                     if (e.which == 13) {
                         $(this).blur();
-                        $('#datasend').focus().click();
+                        $('#btn-chat').focus().click();
                     }
                 });
             });
@@ -245,74 +269,7 @@
                                 </div>
 
                                 <div class="panel-body">
-                                    <ul class="chat">
-                                        <li class="left clearfix">
-                                            <span class="chat-img pull-left">
-                                                <img src="assets/img/1.png" alt="User Avatar" class="img-circle" />
-                                            </span>
-                                            <div class="chat-body clearfix">
-                                                <div class="header">
-                                                    <strong class="primary-font "> Jack Sparrow </strong>
-                                                    <small class="pull-right text-muted label label-danger">
-                                                        <i class="icon-time"></i> 12 mins ago
-                                                    </small>
-                                                </div>
-                                                <br />
-                                                <p>
-                                                    Lorem ipsum dolor sit amet, bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                                </p>
-                                            </div>
-                                        </li>
-                                        <li class="right clearfix">
-                                            <span class="chat-img pull-right">
-                                                <img src="assets/img/2.png" alt="User Avatar" class="img-circle" />
-                                            </span>
-                                            <div class="chat-body clearfix">
-                                                <div class="header">
-                                                    <small class=" text-muted label label-info">
-                                                        <i class="icon-time"></i> 13 mins ago</small>
-                                                    <strong class="pull-right primary-font"> Jhony Deen</strong>
-                                                </div>
-                                                <br />
-                                                <p>
-                                                    Lorem ipsum dolor sit amet, consectetur a dolor, quis ullamcorper ligula sodales.
-                                                </p>
-                                            </div>
-                                        </li>
-                                        <li class="left clearfix">
-                                            <span class="chat-img pull-left">
-                                                <img src="assets/img/3.png" alt="User Avatar" class="img-circle" />
-                                            </span>
-                                            <div class="chat-body clearfix">
-                                                <div class="header">
-                                                    <strong class="primary-font"> Jack Sparrow </strong>
-                                                    <small class="pull-right text-muted label label-warning">
-                                                        <i class="icon-time"></i> 12 mins ago
-                                                    </small>
-                                                </div>
-                                                <br />
-                                                <p>
-                                                    Lorem ipsum dolor sit amet, bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                                </p>
-                                            </div>
-                                        </li>
-                                        <li class="right clearfix">
-                                            <span class="chat-img pull-right">
-                                                <img src="assets/img/4.png" alt="User Avatar" class="img-circle" />
-                                            </span>
-                                            <div class="chat-body clearfix">
-                                                <div class="header">
-                                                    <small class=" text-muted label label-primary">
-                                                        <i class="icon-time"></i> 13 mins ago</small>
-                                                    <strong class="pull-right primary-font"> Jhony Deen</strong>
-                                                </div>
-                                                <br />
-                                                <p>
-                                                    Lorem ipsum dolor sit amet, consectetur a dolor, quis ullamcorper ligula sodales.
-                                                </p>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                    
                                 </div>
 
                                 <div class="panel-footer">
@@ -375,9 +332,7 @@
 
 
         <!-- GLOBAL SCRIPTS -->
-        <script src="assets/plugins/jquery-2.0.3.min.js"></script>
-        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-        <script src="assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+
         <!-- END GLOBAL SCRIPTS -->
 
         <!-- PAGE LEVEL SCRIPTS -->

@@ -24,10 +24,40 @@ var io = socket_io();
 app.io = io;
 //var socketRoutes = require('./routes/index')(io);
 
-io.on("connection", function (socket)
-{
-    console.log("A user connected");
+/*io.on("connection", function (socket)
+ {
+ console.log("A user connected");
+ });*/
+
+
+var usernames = {};
+
+io.on('connection', function (socket) {
+    socket.on('sendchat', function (data) {
+        io.emit('updatechat', socket.username, data);
+    });
+
+    // when the client emits 'adduser', this listens and executes
+    socket.on('adduser', function (username) {
+        socket.username = username;
+        usernames[username] = username;
+        socket.emit('updatechat', 'SERVER', 'you have connected');
+        socket.broadcast.emit('updatechat', 'SERVER', username + ' has connected');
+        io.emit('updateusers', usernames);
+    });
+
+    socket.on('disconnect', function () {
+        console.log('User has left chat')
+        delete usernames[socket.username];
+        io.emit('updateusers', usernames);
+        // echo globally that this client has left
+        socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
+    });
 });
+
+
+
+
 
 passport.use(new LocalStrategy(function (username, password, done) {
     new model.User({username: username}).fetch().then(function (data) {
