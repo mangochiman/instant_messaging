@@ -25,6 +25,7 @@ connection.query('\
 CREATE TABLE `' + dbconfig.database + '`.`group` ( \
     `group_id` INT UNSIGNED NOT NULL AUTO_INCREMENT, \
     `name` VARCHAR(100), \
+    `color` CHAR(100), \
      PRIMARY KEY (`group_id`)\
 )');
 
@@ -32,7 +33,6 @@ connection.query('\
 CREATE TABLE `' + dbconfig.database + '`.`group_membership` ( \
     `group_id` INT UNSIGNED NOT NULL, \
     `user_id` INT UNSIGNED NOT NULL, \
-     PRIMARY KEY (`group_id`)\
 )');
 
 connection.query('\

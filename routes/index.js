@@ -114,10 +114,12 @@ router.get('/add_group', function (req, res, next) {
 router.post('/create_group', function (req, res, next) {
     console.log(req.body)
     group_name = req.body.group_name;
+    group_color = req.body.group_color;
     group_description = req.body.group_description; //Add group_description later;
 
     new Group({
         name: group_name,
+        color: group_color
     }).save().then(function (group) {
         res.redirect("/add_group");
     })

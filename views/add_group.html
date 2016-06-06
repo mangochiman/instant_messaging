@@ -148,15 +148,15 @@
                     </li>
 
                     <% for (var group in groups){ %>
-                            <% 
-                                var dataToggle = ''; 
-                                var iconClass = ''
-                            %>
+                    <% 
+                    var dataToggle = ''; 
+                    var iconClass = ''
+                    %>
                     <% if (groups[group]["group_members"].length > 0){ %>
-                            <% 
-                            var dataToggle="collapse" 
-                            var iconClass = "icon-angle-left"
-                            %>
+                    <% 
+                    var dataToggle="collapse" 
+                    var iconClass = "icon-angle-left"
+                    %>
                     <%}%>
                     <li class="panel ">
                         <a href="#" data-parent="#menu" data-toggle='<%= dataToggle %>' class="accordion-toggle" data-target="#component-nav-<%= groups[group]['group_id'] %>">
@@ -168,7 +168,7 @@
                             &nbsp; <span class="label label-success"><%= groups[group]["members_count"]%></span>&nbsp;
                         </a>
                         <ul class="collapse" id="component-nav-<%= groups[group]['group_id'] %>">
-          
+
                             <% for (var i in groups[group]["group_members"]){ %>
                             <% user = groups[group]["group_members"][i]; %>
                             <li class=""><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
@@ -216,6 +216,32 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label class="control-label col-lg-4">Select Group Color</label>
+                                            <div class="col-lg-4">
+                                                <label class="radio">
+                                                    <input type="radio" checked="" value="default" name="group_color">
+                                                    <span class="label label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" value="warning" name="group_color">
+                                                    <span class="label label-warning">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" value="success" name="group_color">
+                                                    <span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" value="info" name="group_color">
+                                                    <span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" value="danger" name="group_color">
+                                                    <span class="label label-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                </label>
+                                                <br>
+                                            </div>
+                                        </div>
                                         <div style="text-align:center;" class="form-actions no-margin-bottom">
                                             <input type="submit" class="btn btn-primary btn-lg " value="Submit">
                                         </div>
