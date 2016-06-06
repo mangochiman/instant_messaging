@@ -19,8 +19,8 @@ router.get('/', /*loadUser,*/ function (req, res, next) {
     res.redirect('/index');
 });
 
-router.get('/index', /* loadUser,*/ function (req, res, next) {
-    //var user = req.user.toJSON();
+router.get('/index',  loadUser, function (req, res, next) {
+    var user = req.user.toJSON();
 
     knex('group').then(function (groups) {
         var promises = groups.map(function (group) {
@@ -42,7 +42,7 @@ router.get('/index', /* loadUser,*/ function (req, res, next) {
 
         return Promise.all(promises2)
     }).then(function (data) {
-        res.render('index', {groups: data/*, user: user*/});
+        res.render('index', {groups: data, user: user});
     });
 });
 
