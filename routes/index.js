@@ -6,6 +6,8 @@ var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
 var loadUser = require('../force_login');
 var Promise = require('bluebird');
+console.log(require('../app'));
+
 
 User = model.User;
 Group = model.Group;
@@ -17,7 +19,7 @@ router.get('/', /*loadUser,*/ function (req, res, next) {
     res.redirect('/index');
 });
 
-router.get('/index',/* loadUser,*/ function (req, res, next) {
+router.get('/index', /* loadUser,*/ function (req, res, next) {
     //var user = req.user.toJSON();
 
     knex('group').then(function (groups) {
@@ -179,5 +181,16 @@ router.post('/create_member', function (req, res, next) {
         });
     });
 });
+
+module.exports = function (io) {
+    var app = require('express');
+    var router = app.Router();
+
+    io.on('connection', function (socket) {
+        console.log('Connection from Index')
+    });
+
+    return router;
+}
 
 module.exports = router;

@@ -19,6 +19,15 @@ var app = express();
 var model = require('./models/instantMessage');
 
 var app = express();
+var socket_io = require("socket.io");
+var io = socket_io();
+app.io = io;
+//var socketRoutes = require('./routes/index')(io);
+
+io.on("connection", function (socket)
+{
+    console.log("A user connected");
+});
 
 passport.use(new LocalStrategy(function (username, password, done) {
     new model.User({username: username}).fetch().then(function (data) {

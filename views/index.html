@@ -30,6 +30,46 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
+        <script src="javascripts/socket.io.js"></script>
+        <script>
+            var socket = io.connect('http://0.0.0.0:2000');
+            socket.on('connect', function () {
+                socket.emit('adduser', 'Mangochiman');
+            });
+
+            // listener, whenever the server emits 'updatechat', this updates the chat body
+            socket.on('updatechat', function (username, data) {
+                $('#conversation').append('<b>' + username + ':</b> ' + data + '<br>');
+            });
+
+            // listener, whenever the server emits 'updateusers', this updates the username list
+            socket.on('updateusers', function (data) {
+                $('#users').empty();
+                $.each(data, function (key, value) {
+                    $('#users').append('<div>' + key + '</div>');
+                });
+            });
+
+            // on load of page
+            $(function () {
+                // when the client clicks SEND
+                $('#datasend').click(function () {
+                    var message = $('#data').val();
+                    $('#data').val('');
+                    // tell server to execute 'sendchat' and send along one parameter
+                    socket.emit('sendchat', message);
+                });
+
+                // when the client hits ENTER on their keyboard
+                $('#data').keypress(function (e) {
+                    if (e.which == 13) {
+                        $(this).blur();
+                        $('#datasend').focus().click();
+                    }
+                });
+            });
+
+        </script>
     </head>
 
     <!-- END HEAD -->
@@ -60,15 +100,15 @@
                     <ul class="nav navbar-top-links navbar-right">
 
                         <!-- MESSAGES SECTION -->
-                        
+
                         <!--END MESSAGES SECTION -->
 
                         <!--TASK SECTION -->
-                        
+
                         <!--END TASK SECTION -->
 
                         <!--ALERTS SECTION -->
-                       
+
                         <!-- END ALERTS SECTION -->
 
                         <!--ADMIN SETTINGS SECTIONS -->
@@ -87,7 +127,7 @@
                             </ul>
 
                         </li>
-                        
+
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="icon-user "></i>&nbsp; <i class="icon-chevron-down "></i>
@@ -147,15 +187,15 @@
                     </li>
 
                     <% for (var group in groups){ %>
-                            <% 
-                                var dataToggle = ''; 
-                                var iconClass = ''
-                            %>
+                    <% 
+                    var dataToggle = ''; 
+                    var iconClass = ''
+                    %>
                     <% if (groups[group]["group_members"].length > 0){ %>
-                            <% 
-                            var dataToggle="collapse" 
-                            var iconClass = "icon-angle-left"
-                            %>
+                    <% 
+                    var dataToggle="collapse" 
+                    var iconClass = "icon-angle-left"
+                    %>
                     <%}%>
                     <li class="panel ">
                         <a href="#" data-parent="#menu" data-toggle='<%= dataToggle %>' class="accordion-toggle" data-target="#component-nav-<%= groups[group]['group_id'] %>">
@@ -167,7 +207,7 @@
                             &nbsp; <span class="label label-success"><%= groups[group]["members_count"]%></span>&nbsp;
                         </a>
                         <ul class="collapse" id="component-nav-<%= groups[group]['group_id'] %>">
-          
+
                             <% for (var i in groups[group]["group_members"]){ %>
                             <% user = groups[group]["group_members"][i]; %>
                             <li class=""><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
@@ -290,7 +330,7 @@
 
 
                         </div>
-                    
+
                     </div>
                     <!-- END COMMENT AND NOTIFICATION  SECTION -->
 
@@ -298,11 +338,11 @@
 
 
                     <!--  STACKING CHART  SECTION   -->
-                    
+
                     <!--END STACKING CHART SCETION  -->
 
                     <!--TABLE, PANEL, ACCORDION AND MODAL  -->
-                   
+
                     <!--TABLE, PANEL, ACCORDION AND MODAL  -->
 
 
@@ -315,12 +355,12 @@
             <div id="right">
 
 
-                
+
                 <div class="well well-small">
                     <button class="btn btn-primary btn-block"> Private Mode</button>
                     <button class="btn btn-info btn-block"> Open Mode </button>
                 </div>
-                
+
             </div>
             <!-- END RIGHT STRIP  SECTION -->
         </div>
