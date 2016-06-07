@@ -50,14 +50,28 @@
                 
                 html = '<ul class="chat">';
                 html += '<li class="left clearfix">';
-                html += '<span class="chat-img pull-left">';
-                html += "<button class='btn btn-" + btn_style + " btn-circle btn-xl'></button>";
-                html += '</span>';
-                html += '<div class="chat-body clearfix">';
-                html += '<div class="header">';
-                html += '<strong class="primary-font ">' + userdata.username + '</strong>';
-                html += '<small class="pull-right text-muted label label-danger">';
-                html += '<i class="icon-time"></i> 12 mins ago';
+ 
+                if (userdata.username === userName){
+                  html += '<span class="chat-img pull-left">';
+                  //html += "<button class='btn btn-" + btn_style + " btn-circle btn-xl pull-left'></button>";
+                  html += '</span>';
+                  html += '<div class="chat-body clearfix">';
+                  html += '<div class="header">';
+                  html += '<strong class="primary-font ">' + userdata.username + '</strong>';
+                  html += '<small class="pull-right  text-muted">';
+                  html += '<i class="pull-right icon-time"></i> 12 mins ago';
+                }
+                else{
+                 html += '<span class="chat-img pull-right">';
+                 //html += "<button class='btn btn-" + btn_style + " btn-circle btn-xl pull-right'></button>";
+                 html += '</span>';
+                 html += '<div class="chat-body clearfix">';
+                 html += '<div class="header">';
+                 html += '<strong class="pull-right primary-font ">' + userdata.username + '</strong>';
+                 html += '<small class="pull-left  text-muted">';
+                 html += '<i class="pull-left icon-time"></i> 12 mins ago';
+                }
+                
                 html += '</small>';
                 html += '</div>';
                 html += '<br />';
