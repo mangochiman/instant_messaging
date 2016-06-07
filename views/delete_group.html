@@ -147,11 +147,12 @@
 
                         </a>                   
                     </li>
-
+                    <% var groupMembers = {} %>
                     <% for (var group in groups){ %>
                     <% 
                     var dataToggle = ''; 
                     var iconClass = ''
+                    groupMembers[groups[group]["group_id"]] = groups[group]["group_members"].length;
                     %>
                     <% if (groups[group]["group_members"].length > 0){ %>
                     <% 
@@ -182,7 +183,6 @@
 
             </div>
             <!--END MENU SECTION -->
-
 
 
             <!--PAGE CONTENT -->
@@ -218,7 +218,7 @@
                                                 <tr>
                                                     <td><%= count %></td>
                                                     <td><%= groups_main[group].name %></td>
-                                                    <td>&nbsp;</td>
+                                                    <td style="text-align:center;"><%= groupMembers[groups_main[group].group_id]%></td>
                                                     <td style="text-align: center;"><button class="btn btn-danger btn-block"><i class="icon-remove icon-white"></i> Delete</button></td>
                                                 </tr>
                                                 <% count = count + 1 %>
