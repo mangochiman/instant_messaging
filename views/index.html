@@ -38,14 +38,15 @@
             var socket = io.connect('http://192.168.43.22:2000');
             var userName = "<%= user.fname + ' ' + user.lname%>"
             var groupColor = "<%=group_color%>";
-            var userData = {username: userName, usercolor: groupColor}
+            var userData = {username: userName, usercolor: groupColor};
+            var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
             socket.on('connect', function () {
                 socket.emit('adduser', userData);
             });
 
             // listener, whenever the server emits 'updatechat', this updates the chat body
             socket.on('updatechat', function (userdata, data) {
-                console.log(userdata)
+                color = colors[userdata.usercolor];
                 btn_style = userdata.usercolor;
                 
                 html = '<ul class="chat">';
@@ -57,7 +58,7 @@
                   html += '</span>';
                   html += '<div class="chat-body clearfix">';
                   html += '<div class="header">';
-                  html += '<strong class="primary-font ">' + userdata.username + '</strong>';
+                  html += '<strong class="primary-font "><span style="color: ' +  color + '">' + userdata.username + '</span></strong>';
                   html += '<small class="pull-right  text-muted">';
                   html += '<i class="pull-right icon-time"></i> 12 mins ago';
                 }
@@ -67,7 +68,7 @@
                  html += '</span>';
                  html += '<div class="chat-body clearfix">';
                  html += '<div class="header">';
-                 html += '<strong class="pull-right primary-font ">' + userdata.username + '</strong>';
+                 html += '<strong class="pull-right primary-font "><span style="color: ' +  color + '">' + userdata.username + '</span></strong>';
                  html += '<small class="pull-left  text-muted">';
                  html += '<i class="pull-left icon-time"></i> 12 mins ago';
                 }
