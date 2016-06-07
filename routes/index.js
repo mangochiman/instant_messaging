@@ -159,8 +159,12 @@ router.get('/delete_group', function (req, res, next) {
 
 router.post('/process_delete_group', function (req, res, next) {
     group_id = req.body.group_id;
+    console.log(group_id);
     knex('group').where('group_id', '=', group_id).del().then(function (group) {
-        res.redirect("/delete_group");
+        knex('group_membership').where('group_id', '=', group_id).del().then(function (group_membership) {
+            res.redirect("/delete_group");
+        })
+
     });
 })
 
