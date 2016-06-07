@@ -21,33 +21,38 @@ router.get('/', /*loadUser,*/ function (req, res, next) {
 
 router.get('/index', loadUser, function (req, res, next) {
     var user = req.user.toJSON();
+    knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
+        knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
+            group_color = g[0].color;
+            knex('group').then(function (groups) {
+                var promises = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
+                            .then(function (user_count) {
+                                group['members_count'] = user_count[0]["user_id"];
+                                return group;
+                            })
+                })
 
-    knex('group').then(function (groups) {
-        var promises = groups.map(function (group) {
-            group_id = group.group_id;
-            return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
-                    .then(function (user_count) {
-                        group['members_count'] = user_count[0]["user_id"];
-                        return group;
+                var promises2 = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
+                        group['group_members'] = users;
+                        return group
                     })
+                })
+
+                return Promise.all(promises2)
+            }).then(function (data) {
+                res.render('index', {groups: data, user: user, group_color: group_color});
+            });
         })
 
-        var promises2 = groups.map(function (group) {
-            group_id = group.group_id;
-            return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
-                group['group_members'] = users;
-                return group
-            })
-        })
+    })
 
-        return Promise.all(promises2)
-    }).then(function (data) {
-        res.render('index', {groups: data, user: user});
-    });
 });
 
 router.get('/sign_in', function (req, res, next) {
-    console.log(req.isAuthenticated())
     if (req.isAuthenticated())
         res.redirect('/');
 
@@ -127,7 +132,7 @@ router.post('/create_group', function (req, res, next) {
 });
 
 router.get('/delete_group', function (req, res, next) {
-    groups_main = new model.Group().fetchAll();
+    //groups_main = new model.Group().fetchAll();
     new model.Group().fetchAll().then(function (groups_main) {
         groups_main = JSON.stringify(groups_main);
         knex('group').then(function (groups) {
@@ -196,35 +201,40 @@ router.get('/add_member', function (req, res, next) {
 });
 
 router.get('/delete_member', function (req, res, next) {
-
-    knex('group').then(function (groups) {
-        var promises = groups.map(function (group) {
-            group_id = group.group_id;
-            return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
-                    .then(function (user_count) {
-                        group['members_count'] = user_count[0]["user_id"];
-                        return group;
-                    })
-        })
-
-        var promises2 = groups.map(function (group) {
-            group_id = group.group_id;
-            return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
-                group['group_members'] = users;
-                return group
+    new model.User().fetchAll().then(function (users) {
+        users = JSON.stringify(users);
+        knex('group').then(function (groups) {
+            var promises = groups.map(function (group) {
+                group_id = group.group_id;
+                return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
+                        .then(function (user_count) {
+                            group['members_count'] = user_count[0]["user_id"];
+                            return group;
+                        })
             })
-        })
 
-        return Promise.all(promises2)
-    }).then(function (data) {
-        res.render('delete_member', {groups: data});
-    });
+            var promises2 = groups.map(function (group) {
+                group_id = group.group_id;
+                return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
+                    group['group_members'] = users;
+                    return group
+                })
+            })
+
+            return Promise.all(promises2)
+        }).then(function (data) {
+            res.render('delete_member', {groups: data, users: JSON.parse(users)});
+        });
+    })
 });
 
 router.post('/process_delete_member', function (req, res, next) {
     user_id = req.body.user_id;
+    console.log()
     knex('user').where('user_id', '=', user_id).del().then(function (user) {
-        res.redirect("/delete_member");
+        knex('group_membership').where('user_id', '=', user_id).del().then(function (group_membership) {
+            res.redirect("/delete_member");
+        })
     });
 })
 

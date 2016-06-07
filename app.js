@@ -34,24 +34,34 @@ var usernames = {};
 
 io.on('connection', function (socket) {
     socket.on('sendchat', function (data) {
-        io.emit('updatechat', socket.username, data);
+        //console.log(data)
+        userData = {username: socket.username, usercolor: socket.usercolor}
+        console.log("Here")
+        console.log(userData)
+        io.emit('updatechat', userData, data);
     });
 
     // when the client emits 'adduser', this listens and executes
-    socket.on('adduser', function (username) {
-        socket.username = username;
-        usernames[username] = username;
-        socket.emit('updatechat', 'SERVER', 'you have connected');
-        socket.broadcast.emit('updatechat', 'SERVER', username + ' has connected');
+    socket.on('adduser', function (userData) {
+       // console.log(userData)
+        socket.username = userData.username;
+        socket.usercolor = userData.usercolor;
+        usernames[userData.username] = userData.username;
+        serve_data = {username: 'Notification', usercolor: userData.usercolor}
+        socket.emit('updatechat', serve_data, 'you have connected');
+        
+        socket.broadcast.emit('updatechat', serve_data, userData.username + ' has connected');
+        userData = {username: userData.username, usercolor: userData.usercolor}
         io.emit('updateusers', usernames);
     });
 
     socket.on('disconnect', function () {
-        console.log('User has left chat')
+        //console.log('User has left chat')
         delete usernames[socket.username];
         io.emit('updateusers', usernames);
         // echo globally that this client has left
-        socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
+        serve_data = {username: 'Notification', usercolor: socket.usercolor}
+        socket.broadcast.emit('updatechat', serve_data, socket.username + ' has disconnected');
     });
 });
 
@@ -61,7 +71,6 @@ io.on('connection', function (socket) {
 
 passport.use(new LocalStrategy(function (username, password, done) {
     new model.User({username: username}).fetch().then(function (data) {
-        console.log(data)
         var user = data;
         if (user === null) {
             return done(null, false, {message: 'Invalid username or password'});
