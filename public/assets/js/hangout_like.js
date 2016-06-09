@@ -32,14 +32,14 @@ $(document).on('click', '#new_chat', function (e) {
 
 $(document).on('mousedown', '.icon_close', function (e) {
     chatWindow = $(this).closest('.chat-window');
-    username = chatWindow.find('.username').attr('username');
-    delete userChatMap[username]; 
+    userid = chatWindow.find('.userid').attr('userid');
+    delete userChatMap[userid]; 
     $(this).closest('.chat-window').remove();
     resetPositions();
 });
 
 
-function buildPrivateChat(username) {
+function buildPrivateChat(username, userID) {
     uname = "'" + username + "'"
     html = '<div class="private-chat">';
     html += '<div class="row chat-window col-xs-5 col-md-3 chat_window">';
@@ -47,7 +47,7 @@ function buildPrivateChat(username) {
     html += '<div class="panel panel-default">';
     html += '<div class="panel-heading top-bar">';
     html += '<div class="col-md-8 col-xs-8">';
-    html += '<h3 class="panel-title"><i class="icon-circle username" username = ' + uname + ' style="color: green;"></i> ' + username + '</h3>';
+    html += '<h3 class="panel-title"><i class="icon-circle userid" userid = ' + userID + ' style="color: green;"></i> ' + username + '</h3>';
     html += '</div>';
     html += '<div class="col-md-4 col-xs-4" style="text-align: right;">';
     html += '<span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span>';
@@ -81,8 +81,8 @@ function buildPrivateChat(username) {
     html += '</div>';
 
 
-    if (!(username in userChatMap)) {
-        userChatMap[username] = username;
+    if (!(userID in userChatMap)) {
+        userChatMap[userID] = username;
         var size = $(".chat-window:last").css("margin-right");
         size_total = parseInt(size) + 370;
         $('body').append(html);

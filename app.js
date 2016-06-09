@@ -46,7 +46,8 @@ io.on('connection', function (socket) {
        // console.log(userData)
         socket.username = userData.username;
         socket.usercolor = userData.usercolor;
-        usernames[userData.username] = userData.username;
+        socket.userid = userData.userid;
+        usernames[userData.username] = [userData.username, userData.userid];
         serve_data = {username: 'Notification', usercolor: userData.usercolor}
         socket.emit('updatechat', serve_data, 'you have connected');
         

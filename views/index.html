@@ -39,9 +39,10 @@
 
         <script>
             var socket = io.connect('http://localhost:2000');
-            var userName = "<%= user.fname + ' ' + user.lname%>"
+            var userName = "<%= user.fname + ' ' + user.lname%>";
+            var userid = "<%= user.user_id %>";
             var groupColor = "<%=group_color%>";
-            var userData = {username: userName, usercolor: groupColor};
+            var userData = {username: userName, usercolor: groupColor, userid: userid};
             var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
             socket.on('connect', function () {
                 socket.emit('adduser', userData);
@@ -51,7 +52,7 @@
             socket.on('updatechat', function (userdata, data) {
                 color = colors[userdata.usercolor];
                 btn_style = userdata.usercolor;
-
+                userID = data.userid;
                 html = '<ul class="chat">';
                 html += '<li class="left clearfix">';
 
@@ -102,8 +103,10 @@
                 else {
                     $.each(data, function (key, value) {
                         username = "'" + key + "'";
-                        if (key !== userName) {
-                            user = '<a class="list-group-item" href="#" onclick="buildPrivateChat(' + username + ');">';
+                        userID = value[1];
+                        
+                        if (key[0] !== userName) {
+                            user = '<a class="list-group-item" href="#" onclick="buildPrivateChat(' + username + ', ' + userID + ');">';
                             user += '<i class="icon-circle success" style="color: green;"></i> ' + key;
                             user += '</a>'
                             $('.online-users').append(user);
@@ -274,7 +277,8 @@
 
                             <% for (var i in groups[group]["group_members"]){ %>
                             <% user = groups[group]["group_members"][i]; %>
-                            <li class=""><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
+                            <% uname =  user.fname + ' ' + user.lname %>
+                            <li class="" onclick="buildPrivateChat('<%= uname %>');" ><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
                             <%}%>
                         </ul>
                     </li>
