@@ -24,6 +24,7 @@
         <link href="assets/css/layout2.css" rel="stylesheet" />
         <link href="assets/plugins/flot/examples/examples.css" rel="stylesheet" />
         <link rel="stylesheet" href="assets/plugins/timeline/timeline.css" />
+        <link rel="stylesheet" href="assets/css/hangout_like.css" />
         <!-- END PAGE LEVEL  STYLES -->
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -33,9 +34,11 @@
         <script src="assets/plugins/jquery-2.0.3.min.js"></script>
         <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="assets/js/hangout_like.js"></script>
         <script src="javascripts/socket.io.js"></script>
+
         <script>
-            var socket = io.connect('http://192.168.18.231:2000');
+            var socket = io.connect('http://localhost:2000');
             var userName = "<%= user.fname + ' ' + user.lname%>"
             var groupColor = "<%=group_color%>";
             var userData = {username: userName, usercolor: groupColor};
@@ -385,9 +388,63 @@
 
             <!-- GLOBAL SCRIPTS -->
 
-            <!-- END GLOBAL SCRIPTS -->
+            <!-- HANGOUT LIKE CHAT UI -->
+            <div class="private-chat">
+                <div class="row chat-window col-xs-5 col-md-3 chat_window" style="margin-left:10px;">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading top-bar">
+                                <div class="col-md-8 col-xs-8">
+                                    <h3 class="panel-title"><i class="icon-circle" style="color: green;"></i> Chat - Miguel</h3>
+                                </div>
+                                <div class="col-md-4 col-xs-4" style="text-align: right;">
+                                    <!--<a href="#"><span id="minim_chat_window" class="glyphicon glyphicon-minus icon_minim"></span></a>-->
+                                    <a href="#"><span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>
+                                </div>
+                            </div>
+                            <div class="panel-body msg_container_base">
+                                
+                                <div class="row msg_container base_sent">
+                                    <div class="col-md-10 col-xs-10">
+                                        <div class="messages msg_sent">
+                                            <p>that mongodb thing looks good, huh?
+                                                tiny master db, and huge document store</p>
+                                            <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-xs-2 avatar">
+                                        <img src="assets/img/avata3.jpg" class=" img-responsive ">
+                                    </div>
+                                </div>
+                                
+                                <div class="row msg_container base_receive">
+                                    <div class="col-md-2 col-xs-2 avatar">
+                                        <img src="assets/img/avata2.jpg" class=" img-responsive ">
+                                    </div>
+                                    <div class="col-md-10 col-xs-10">
+                                        <div class="messages msg_receive">
+                                            <p>that mongodb thing looks good, huh?
+                                                tiny master db, and huge document store</p>
+                                            <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="panel-footer">
+                                <div class="input-group">
+                                    <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary btn-sm" id="btn-chat">Send</button>
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
 
+            </div>       
     </body>
 
     <!-- END BODY -->
