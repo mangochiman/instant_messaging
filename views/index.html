@@ -104,7 +104,7 @@
                     $.each(data, function (key, value) {
                         username = "'" + key + "'";
                         userID = value[1];
-                        
+
                         if (key[0] !== userName) {
                             user = '<a class="list-group-item" href="#" onclick="buildPrivateChat(' + username + ', ' + userID + ');">';
                             user += '<i class="icon-circle success" style="color: green;"></i> ' + key;
@@ -129,13 +129,22 @@
 
                 // when the client hits ENTER on their keyboard
                 $('#btn-input').keypress(function (e) {
-                    if (e.which == 13) {
+                    if (e.which === 13) {
                         $(this).blur();
                         $('#btn-chat').focus().click();
                     }
                 });
             });
 
+
+            function sendPrivateMessage(recepientID) {
+                senderID = userid;
+                $(this).blur();
+                var msg = $('#input_' + recepientID).val();
+                $('#input_' + recepientID).val('');
+                console.log(msg);
+            }
+            
         </script>
     </head>
 
@@ -278,7 +287,8 @@
                             <% for (var i in groups[group]["group_members"]){ %>
                             <% user = groups[group]["group_members"][i]; %>
                             <% uname =  user.fname + ' ' + user.lname %>
-                            <li class="" onclick="buildPrivateChat('<%= uname %>');" ><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
+                            <% userID =  user.user_id %>
+                            <li class="" onclick="buildPrivateChat('<%= uname %>', '<%= userID %>');" ><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
                             <%}%>
                         </ul>
                     </li>
@@ -392,7 +402,7 @@
 
 
             <!-- GLOBAL SCRIPTS -->
- 
+
     </body>
 
     <!-- END BODY -->

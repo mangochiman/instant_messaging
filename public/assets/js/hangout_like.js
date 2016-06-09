@@ -33,7 +33,7 @@ $(document).on('click', '#new_chat', function (e) {
 $(document).on('mousedown', '.icon_close', function (e) {
     chatWindow = $(this).closest('.chat-window');
     userid = chatWindow.find('.userid').attr('userid');
-    delete userChatMap[userid]; 
+    delete userChatMap[userid];
     $(this).closest('.chat-window').remove();
     resetPositions();
 });
@@ -68,9 +68,9 @@ function buildPrivateChat(username, userID) {
     html += '</div>';
     html += '<div class="panel-footer">';
     html += '<div class="input-group">';
-    html += '<input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />';
+    html += '<input id="input_' + userID + '" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />';
     html += '<span class="input-group-btn">';
-    html += '<button class="btn btn-primary btn-sm" id="btn-chat">Send</button>';
+    html += '<button class="btn btn-primary btn-sm" id="btn_' + userID + '" onclick="sendPrivateMessage(' + userID + ');">Send</button>';
     html += '</span>';
     html += '</div>';
     html += '</div>';
@@ -88,6 +88,13 @@ function buildPrivateChat(username, userID) {
         $('body').append(html);
         resetPositions();
     }
+
+    $('#input_' + userID).keypress(function (e) {
+        if (e.which === 13) {
+            $(this).blur();
+            $('#btn_' + userID).focus().click();
+        }
+    });
 }
 
 function resetPositions() {
