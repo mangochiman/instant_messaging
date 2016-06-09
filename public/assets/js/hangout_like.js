@@ -28,15 +28,22 @@ $(document).on('click', '#new_chat', function (e) {
     clone.css("margin-left", size_total);
 });
 
-$(document).on('click', '.icon_close', function (e) {
-    //$(this).parent().parent().parent().parent().remove();
-    e.preventDefault();
-    $(".chat-window").remove();
+$(document).on('mousedown', '.icon_close', function (e) {
+    $(this).closest('.chat-window').remove();
+    resetPositions();
 });
 
 function buildPrivateChat() {
     var size = $(".chat-window:last").css("margin-right");
-    size_total = parseInt(size) + 350;
-    var clone = $(".chat-window").clone().appendTo("body");
+    size_total = parseInt(size) + 370;
+    var clone = $(".chat-window:last").clone().appendTo("body");
     clone.css("margin-right", size_total);
+}
+
+function resetPositions() {
+    marginRight = -15;
+    $('.chat-window').each(function (i, obj) {
+        ($(this)).css("margin-right", marginRight);
+        marginRight+=370;
+    });
 }
