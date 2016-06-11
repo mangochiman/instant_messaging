@@ -54,9 +54,10 @@
             var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
             socket.on('connect', function () {
                 socket.emit('adduser', userData);
-                chatData = {room_id: 1, senderid: userid};
+                chatData = {room_id: userid, logged_in_user: userid};
                 socket.emit('join room', chatData);
             });
+
 
             socket.on('updatechat', function (userdata, data) {
                 color = colors[userdata.usercolor];
@@ -131,8 +132,12 @@
                 }
             });
 
+            function switchRoom(room) {
+                socket.emit('switchRoom', room);
+            }
+
             socket.on('message', function (data) {
-                console.log(data)
+                logged_in_user_id = data.logged_in_user_id;
                 partnerID = data.senderid;
                 receiverID = data.receiverid;
 
@@ -143,16 +148,17 @@
                 userid = data.senderid;
                 pvt_msg = [data.message, data.receiverid];
                 recepient = data.recepient;
-                //if (sID === parseInt(userid) || rID === parseInt(userid)) {
+
+
                 if (!privateMessages.hasOwnProperty(chatID)) {
                     privateMessages[chatID] = [];
                 }
+
                 chatUserNames[data.chat_id] = data.username;
                 privateMessages[data.chat_id].push(pvt_msg);
-
                 chatData = {chat_id: data.chat_id, username: data.username, recepient: recepient}
                 buildPrivateChat(chatData);
-                //}
+    
             });
 
             var recepient;
@@ -161,6 +167,7 @@
             {
                 chatID = $(obj).attr('chat_id');
                 userID = $(obj).attr('username');
+                //switchRoom(chatID)
                 /*if (!privateMessages.hasOwnProperty(chatID)) {
                  privateMessages[chatID] = [];
                  }*/

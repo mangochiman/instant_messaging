@@ -29,8 +29,19 @@ app.io = io;
  console.log("A user connected");
  });*/
 
+function merge_options(obj1, obj2) {
+    var obj3 = {};
+    for (var attrname in obj1) {
+        obj3[attrname] = obj1[attrname];
+    }
+    for (var attrname in obj2) {
+        obj3[attrname] = obj2[attrname];
+    }
+    return obj3;
+}
 
 var usernames = {};
+var userids = {}
 
 io.on('connection', function (socket) {
     socket.on('sendchat', function (data) {
@@ -38,17 +49,50 @@ io.on('connection', function (socket) {
         io.emit('updatechat', userData, data);
     });
 
-    socket.on('join room', function (room) {
-        socket.room = room;
+    socket.on('tryUser', function (uid) {
+        io.sockets.to(room).emit('displayUser', uid);
+        io.sockets.in(room).emit('displayUser', uid);
+    })
+
+    socket.on('join room', function (chatData) {
+        console.log('Joining Room ' + chatData.room_id);
+        socket.room = chatData.room_id;
+        socket.logged_in_user_id = chatData.logged_in_user;
+        userids[chatData.logged_in_user] = chatData.logged_in_user;
+        room = chatData.room_id;
         socket.join(room);
     })
 
     socket.on('message', function (data) {
-        room = socket.room;
+        first_room = socket.room;
+        second_room = data.receiverid;
         //socket.broadcast.to(room).emit('message', data);
-        io.sockets.to(room).emit('update_current_user', data);
-        io.sockets.in(room).emit('message', data);
+        console.log('First Room = ' + first_room + ' Second Room = ' + second_room)
+        chat_id = data.chat_id;
+        if (chat_id.match(first_room)) {
+            data = merge_options(data, {logged_in_user_id: socket.logged_in_user_id});
+            data = merge_options(data, {userids: userids});
+            io.sockets.to(data.senderid).emit('update_current_user', data);
+            io.sockets.in(data.senderid).emit('message', data);
+            io.sockets.to(data.receiverid).emit('update_current_user', data);
+            io.sockets.in(data.receiverid).emit('message', data);
+        } else {
+            console.log('404')
+        }
+
     })
+
+    socket.on('switchRoom', function (newroom) {
+        console.log(newroom)
+        delete io.sockets.adapter.rooms[socket.room];
+        //io.sockets.in(socket.room).leave(socket.room);
+        //socket.leave(socket.room);
+        socket.join(newroom);
+        socket.room = newroom;
+        //socket.leave(socket.room);
+        socket.broadcast.to(newroom).emit('room_switched', newroom);
+        socket.emit('room_switched', newroom, newroom);
+    });
 
     socket.on('adduser', function (userData) {
         socket.username = userData.username;
@@ -66,6 +110,7 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         //console.log('User has left chat')
         delete usernames[socket.username];
+        delete userids[socket.logged_in_user_id];
         io.emit('updateusers', usernames);
         // echo globally that this client has left
         serve_data = {username: 'Notification', usercolor: socket.usercolor}
