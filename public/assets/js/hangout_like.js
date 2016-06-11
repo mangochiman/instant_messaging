@@ -35,19 +35,12 @@ $(document).on('mousedown', '.icon_close', function (e) {
     resetPositions();
 });
 
-function updateStaticVariables(obj) {
-    receiverID = obj.getAttribute("receiverid");
-    currentusername = obj.getAttribute("username");
-    ;
-}
-
 function buildPrivateChat(messages) {
     if (!messages) messages = [];
-    chatID = 'chat_id'//userid + '_' + receiverID;
-    $("#" + chatID).remove();
+    $("." + chatID).remove();
     $("#msg_container_" + chatID).remove();
     
-    html = '<div class="private-chat" id=' + chatID + '>';
+    html = '<div class="private-chat ' + chatID + '" id=' + chatID + '>';
     html += '<div class="row chat-window col-xs-5 col-md-3 chat_window">';
     html += '<div class="col-xs-12 col-md-12">';
     html += '<div class="panel panel-default">';

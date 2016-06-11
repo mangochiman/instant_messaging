@@ -44,12 +44,15 @@
             var groupColor = "<%=group_color%>";
             var chatID;
             var currentusername;
+            var chats = {};
+            var receiverID;
 
             var userData = {username: userName, usercolor: groupColor, userid: userid};
             var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
             socket.on('connect', function () {
                 socket.emit('adduser', userData);
-                socket.emit('join room', 'room1');
+                chatData = {room_id: 1, senderid: userid};
+                socket.emit('join room', chatData);
             });
 
             socket.on('updatechat', function (userdata, data) {
@@ -118,22 +121,34 @@
                 }
 
             });
-            
+
             socket.on('update_current_user', function (data) {
-                if (data.sender !== userName){
+                if (data.sender !== userName) {
                     currentusername = data.sender;
                 }
             });
-            
+
             socket.on('message', function (data) {
                 messages = [data.message];
-                buildPrivateChat(messages);
+                sID = parseInt(data.senderid);
+                rID = parseInt(data.receiverid);
+                partnerID = sID;
+                receiverID = rID;
+
+                participantIDs = [];
+                participantIDs.push(partnerID);
+                participantIDs.push(receiverID);
+                chatID = participantIDs.sort().join('_');
+                
+                if (sID === parseInt(userid) || rID === parseInt(userid)) {
+                    buildPrivateChat(messages);
+                }
             });
 
             function sendPrivateMessage()
             {
                 var msg = $('#input_' + chatID).val();
-                data = {message: msg, sender: userName}
+                data = {message: msg, sender: userName, receiverid: receiverID, senderid: userid};
                 socket.emit('message', data);
             }
 
@@ -152,6 +167,16 @@
                     }
                 });
             });
+
+            function updateStaticVariables(obj) {
+                partnerID = obj.getAttribute('receiverid');
+                receiverID = obj.getAttribute("receiverid");
+                currentusername = obj.getAttribute("username");
+                var participantIDs = [];
+                participantIDs.push(userid);
+                participantIDs.push(partnerID);
+                chatID = participantIDs.sort().join('_');
+            }
 
         </script>
     </head>
