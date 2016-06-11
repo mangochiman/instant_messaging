@@ -38,7 +38,7 @@
         <script src="javascripts/socket.io.js"></script>
 
         <script>
-            var socket = io.connect('http://localhost:2000');
+            var socket = io.connect('/');
             var userName = "<%= user.fname + ' ' + user.lname%>";
             var userid = "<%= user.user_id %>";
             var groupColor = "<%=group_color%>";
