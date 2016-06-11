@@ -167,17 +167,16 @@
             {
                 chatID = $(obj).attr('chat_id');
                 userID = $(obj).attr('username');
-                //switchRoom(chatID)
-                /*if (!privateMessages.hasOwnProperty(chatID)) {
-                 privateMessages[chatID] = [];
-                 }*/
+                receiverID = $(obj).attr('receiverID');
+                console.log('Receiver ID = ' + receiverID);
+
                 $('#btn-input').keypress(function (e) {
                     if (e.which === 13) {
                         $(this).blur();
                         $('#btn-chat').focus().click();
                     }
                 });
-                console.log($('#input_' + chatID))
+                
                 var msg = $('#input_' + chatID).val();
                 data = {message: msg, sender: userName, receiverid: receiverID, senderid: userid,
                     chat_id: chatID, username: currentusername, recepient: userID};

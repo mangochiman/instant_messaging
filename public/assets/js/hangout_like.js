@@ -80,7 +80,7 @@ function buildPrivateChat(data) {
     html += '<div class="input-group">';
     html += '<input chat_id="' + chatID + '" id="input_' + chatID + '" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />';
     html += '<span class="input-group-btn">';
-    html += '<button username="' + recepient + '" chat_id="' + chatID + '" class="btn btn-primary btn-sm" id="btn_' + chatID + '" onclick="sendPrivateMessage(this);">Send</button>';
+    html += '<button receiverid="' + receiverID + '" username="' + recepient + '" chat_id="' + chatID + '" class="btn btn-primary btn-sm" id="btn_' + chatID + '" onclick="sendPrivateMessage(this);">Send</button>';
     html += '</span>';
     html += '</div>';
     html += '</div>';
