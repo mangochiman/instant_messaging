@@ -35,10 +35,16 @@ $(document).on('mousedown', '.icon_close', function (e) {
     resetPositions();
 });
 
-function buildPrivateChat(messages) {
-    if (!messages) messages = [];
-    $("." + chatID).remove();
-    $("#msg_container_" + chatID).remove();
+function buildPrivateChat(data) {
+    if (data) {
+        chatID = data.chat_id;
+        recepient = data.recepient;
+    }
+    else {
+        chatID = chatData.chat_id;
+    }
+
+    private_messages = privateMessages[chatID];
     
     html = '<div class="private-chat ' + chatID + '" id=' + chatID + '>';
     html += '<div class="row chat-window col-xs-5 col-md-3 chat_window">';
@@ -46,20 +52,20 @@ function buildPrivateChat(messages) {
     html += '<div class="panel panel-default">';
     html += '<div class="panel-heading top-bar">';
     html += '<div class="col-md-8 col-xs-8">';
-    html += '<h3 class="panel-title"><i class="icon-circle userid" style="color: green;"></i> ' + currentusername + '</h3>';
+    html += '<h3 class="panel-title"><i class="icon-circle userid" style="color: green;"></i> ' + recepient + '</h3>';
     html += '</div>';
     html += '<div class="col-md-4 col-xs-4" style="text-align: right;">';
     html += '<span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span>';
     html += '</div>';
     html += '</div>';
-    html += '<div class="panel-body msg_container_base">';
+    html += '<div class="panel-body msg_container_base" id="msg_container_base_' + chatID + '">';
 
-    for (var i = 0; i <= messages.length - 1; i++) {
+    for (var i = 0; i <= private_messages.length - 1; i++) {
         html += '<div class="row msg_container base_sent" id="msg_container_' + chatID + '">';
         html += '<div class="col-md-10 col-xs-10">';
 
         html += '<div class="messages msg_sent">';
-        html += '<p>' + messages[i] + '</p>';
+        html += '<p>' + private_messages[i][0] + '</p>';
         html += '<time datetime="2009-11-13T20:00">Timothy • 51 min</time>';
         html += '</div>';
 
@@ -69,12 +75,12 @@ function buildPrivateChat(messages) {
         html += '</div>';
         html += '</div>';
     }
-    
+
     html += '<div class="panel-footer">';
     html += '<div class="input-group">';
-    html += '<input id="input_' + chatID + '" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />';
+    html += '<input chat_id="' + chatID + '" id="input_' + chatID + '" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />';
     html += '<span class="input-group-btn">';
-    html += '<button class="btn btn-primary btn-sm" id="btn_' + chatID + '" onclick="sendPrivateMessage();">Send</button>';
+    html += '<button username="' + recepient + '" chat_id="' + chatID + '" class="btn btn-primary btn-sm" id="btn_' + chatID + '" onclick="sendPrivateMessage(this);">Send</button>';
     html += '</span>';
     html += '</div>';
     html += '</div>';
@@ -84,10 +90,14 @@ function buildPrivateChat(messages) {
     html += '</div>';
     html += '</div>';
 
+    $("." + chatID).remove();
+    $("#msg_container_" + chatID).remove();
+
     $('body').append(html);
     resetPositions();
 
     $('#input_' + chatID).keypress(function (e) {
+        chatID = ($(this).attr('chat_id'));
         if (e.which === 13) {
             $(this).blur();
             $('#btn_' + chatID).focus().click();

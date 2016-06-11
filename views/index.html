@@ -40,12 +40,15 @@
         <script>
             var socket = io.connect('/');
             var userName = "<%= user.fname + ' ' + user.lname%>";
-            var userid = "<%= user.user_id %>";
+            var userid = parseInt("<%= user.user_id %>");
+            var uID = "<%= user.user_id %>";
             var groupColor = "<%=group_color%>";
             var chatID;
             var currentusername;
             var chats = {};
             var receiverID;
+            var privateMessages = {};
+            var chatData;
 
             var userData = {username: userName, usercolor: groupColor, userid: userid};
             var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
@@ -111,7 +114,7 @@
                         userID = value[1];
 
                         if (key !== userName) {
-                            user = '<a class="list-group-item" href="#" username=' + username + ' receiverid=' + userID + ' onclick="updateStaticVariables(this); buildPrivateChat();">';
+                            user = '<a class="list-group-item" href="#" username=' + username + ' receiverid=' + userID + ' onmousedown="updateStaticVariables(this)" onmouseup="buildPrivateChat();">';
                             user += '<i class="icon-circle success" style="color: green;"></i> ' + key;
                             user += '</a>'
                             $('.online-users').append(user);
@@ -129,28 +132,48 @@
             });
 
             socket.on('message', function (data) {
-                messages = [data.message];
+                console.log(data)
                 partnerID = data.senderid;
                 receiverID = data.receiverid;
-                
+
                 sID = parseInt(data.senderid);
                 rID = parseInt(data.receiverid);
 
-
-                participantIDs = [];
-                participantIDs.push(partnerID);
-                participantIDs.push(receiverID);
-                chatID = participantIDs.sort().join('_');
+                chatID = data.chat_id;
                 userid = data.senderid;
-                if (sID === parseInt(userid) || rID === parseInt(userid)) {
-                    buildPrivateChat(messages);
+                pvt_msg = [data.message, data.receiverid];
+                recepient = data.recepient;
+                //if (sID === parseInt(userid) || rID === parseInt(userid)) {
+                if (!privateMessages.hasOwnProperty(chatID)) {
+                    privateMessages[chatID] = [];
                 }
+                chatUserNames[data.chat_id] = data.username;
+                privateMessages[data.chat_id].push(pvt_msg);
+
+                chatData = {chat_id: data.chat_id, username: data.username, recepient: recepient}
+                buildPrivateChat(chatData);
+                //}
             });
 
-            function sendPrivateMessage()
+            var recepient;
+
+            function sendPrivateMessage(obj)
             {
+                chatID = $(obj).attr('chat_id');
+                userID = $(obj).attr('username');
+                /*if (!privateMessages.hasOwnProperty(chatID)) {
+                 privateMessages[chatID] = [];
+                 }*/
+                $('#btn-input').keypress(function (e) {
+                    if (e.which === 13) {
+                        $(this).blur();
+                        $('#btn-chat').focus().click();
+                    }
+                });
+                console.log($('#input_' + chatID))
                 var msg = $('#input_' + chatID).val();
-                data = {message: msg, sender: userName, receiverid: receiverID, senderid: userid};
+                data = {message: msg, sender: userName, receiverid: receiverID, senderid: userid,
+                    chat_id: chatID, username: currentusername, recepient: userID};
                 socket.emit('message', data);
             }
 
@@ -168,16 +191,26 @@
                         $('#btn-chat').focus().click();
                     }
                 });
+
             });
 
+            var chatUserNames = {}
             function updateStaticVariables(obj) {
-                partnerID = obj.getAttribute('receiverid');
-                receiverID = obj.getAttribute("receiverid");
+                partnerID = parseInt(obj.getAttribute('receiverid'));
+                receiverID = parseInt(obj.getAttribute("receiverid"));
+                recepient = obj.getAttribute("username");
+                console.log(recepient)
                 currentusername = obj.getAttribute("username");
                 var participantIDs = [];
-                participantIDs.push(userid);
+                participantIDs.push((userid));
                 participantIDs.push(partnerID);
                 chatID = participantIDs.sort().join('_');
+
+                if (!privateMessages.hasOwnProperty(chatID)) {
+                    privateMessages[chatID] = [];
+                }
+
+                chatData = {chat_id: chatID, username: currentusername, recepient: recepient}
             }
 
         </script>

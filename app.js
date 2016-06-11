@@ -45,7 +45,7 @@ io.on('connection', function (socket) {
 
     socket.on('message', function (data) {
         room = socket.room;
-        socket.broadcast.to(room).emit('message', data);
+        //socket.broadcast.to(room).emit('message', data);
         io.sockets.to(room).emit('update_current_user', data);
         io.sockets.in(room).emit('message', data);
     })
