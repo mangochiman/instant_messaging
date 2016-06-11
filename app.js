@@ -34,23 +34,30 @@ var usernames = {};
 
 io.on('connection', function (socket) {
     socket.on('sendchat', function (data) {
-        //console.log(data)
         userData = {username: socket.username, usercolor: socket.usercolor}
-        console.log("Here")
-        console.log(userData)
         io.emit('updatechat', userData, data);
     });
 
-    // when the client emits 'adduser', this listens and executes
+    socket.on('join room', function (room) {
+        socket.room = room;
+        socket.join(room);
+    })
+
+    socket.on('message', function (data) {
+        room = socket.room;
+        socket.broadcast.to(room).emit('message', data);
+        io.sockets.to(room).emit('update_current_user', data);
+        io.sockets.in(room).emit('message', data);
+    })
+
     socket.on('adduser', function (userData) {
-       // console.log(userData)
         socket.username = userData.username;
         socket.usercolor = userData.usercolor;
         socket.userid = userData.userid;
         usernames[userData.username] = [userData.username, userData.userid];
         serve_data = {username: 'Notification', usercolor: userData.usercolor}
         socket.emit('updatechat', serve_data, 'you have connected');
-        
+
         socket.broadcast.emit('updatechat', serve_data, userData.username + ' has connected');
         userData = {username: userData.username, usercolor: userData.usercolor}
         io.emit('updateusers', usernames);
@@ -65,10 +72,6 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('updatechat', serve_data, socket.username + ' has disconnected');
     });
 });
-
-
-
-
 
 passport.use(new LocalStrategy(function (username, password, done) {
     new model.User({username: username}).fetch().then(function (data) {

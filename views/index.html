@@ -42,13 +42,16 @@
             var userName = "<%= user.fname + ' ' + user.lname%>";
             var userid = "<%= user.user_id %>";
             var groupColor = "<%=group_color%>";
+            var chatID;
+            var currentusername;
+
             var userData = {username: userName, usercolor: groupColor, userid: userid};
             var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
             socket.on('connect', function () {
                 socket.emit('adduser', userData);
+                socket.emit('join room', 'room1');
             });
 
-            // listener, whenever the server emits 'updatechat', this updates the chat body
             socket.on('updatechat', function (userdata, data) {
                 color = colors[userdata.usercolor];
                 btn_style = userdata.usercolor;
@@ -94,7 +97,6 @@
 
             });
 
-            // listener, whenever the server emits 'updateusers', this updates the username list
             socket.on('updateusers', function (data) {
                 $('.online-users').empty();
                 if (Object.keys(data).length === 1) {
@@ -105,8 +107,8 @@
                         username = "'" + key + "'";
                         userID = value[1];
 
-                        if (key[0] !== userName) {
-                            user = '<a class="list-group-item" href="#" onclick="buildPrivateChat(' + username + ', ' + userID + ');">';
+                        if (key !== userName) {
+                            user = '<a class="list-group-item" href="#" username=' + username + ' receiverid=' + userID + ' onclick="updateStaticVariables(this); buildPrivateChat();">';
                             user += '<i class="icon-circle success" style="color: green;"></i> ' + key;
                             user += '</a>'
                             $('.online-users').append(user);
@@ -116,14 +118,29 @@
                 }
 
             });
+            
+            socket.on('update_current_user', function (data) {
+                if (data.sender !== userName){
+                    currentusername = data.sender;
+                }
+            });
+            
+            socket.on('message', function (data) {
+                messages = [data.message];
+                buildPrivateChat(messages);
+            });
 
-            // on load of page
+            function sendPrivateMessage()
+            {
+                var msg = $('#input_' + chatID).val();
+                data = {message: msg, sender: userName}
+                socket.emit('message', data);
+            }
+
             $(function () {
-                // when the client clicks SEND
                 $('#btn-chat').click(function () {
                     var message = $('#btn-input').val();
                     $('#btn-input').val('');
-                    // tell server to execute 'sendchat' and send along one parameter
                     socket.emit('sendchat', message);
                 });
 
@@ -136,15 +153,6 @@
                 });
             });
 
-
-            function sendPrivateMessage(recepientID) {
-                senderID = userid;
-                $(this).blur();
-                var msg = $('#input_' + recepientID).val();
-                $('#input_' + recepientID).val('');
-                console.log(msg);
-            }
-            
         </script>
     </head>
 
