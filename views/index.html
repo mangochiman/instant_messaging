@@ -130,16 +130,18 @@
 
             socket.on('message', function (data) {
                 messages = [data.message];
+                partnerID = data.senderid;
+                receiverID = data.receiverid;
+                
                 sID = parseInt(data.senderid);
                 rID = parseInt(data.receiverid);
-                partnerID = sID;
-                receiverID = rID;
+
 
                 participantIDs = [];
                 participantIDs.push(partnerID);
                 participantIDs.push(receiverID);
                 chatID = participantIDs.sort().join('_');
-                
+                userid = data.senderid;
                 if (sID === parseInt(userid) || rID === parseInt(userid)) {
                     buildPrivateChat(messages);
                 }
