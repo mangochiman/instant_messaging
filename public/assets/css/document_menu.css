@@ -1,0 +1,37 @@
+.documen_menu_window{
+    left: 0;
+}
+
+.document-window{
+    bottom:0;
+    position:fixed;
+    float:left;
+}
+
+.document-window-window > div > .panel{
+    border-radius: 5px 5px 0 0;
+}
+
+.document_container_base{
+  background: #e5e5e5;
+  margin: 0;
+  padding: 0 10px 10px;
+  max-height:300px;
+  overflow-x:hidden;
+}
+
+.document-top-bar {
+  background: #666;
+  color: white;
+  padding: 10px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.document_container {
+    padding: 10px;
+    overflow: hidden;
+    display: flex;
+}
+

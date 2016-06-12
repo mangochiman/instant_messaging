@@ -32,6 +32,7 @@ $(document).on('click', '#new_chat', function (e) {
 $(document).on('mousedown', '.icon_close', function (e) {
     chatWindow = $(this).closest('.chat-window');
     $(this).closest('.chat-window').remove();
+    $(this).closest('.document-window').remove();
     resetPositions();
 });
 

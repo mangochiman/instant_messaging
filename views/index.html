@@ -25,6 +25,7 @@
         <link href="assets/plugins/flot/examples/examples.css" rel="stylesheet" />
         <link rel="stylesheet" href="assets/plugins/timeline/timeline.css" />
         <link rel="stylesheet" href="assets/css/hangout_like.css" />
+        <link rel="stylesheet" href="assets/css/document_menu.css" />
         <!-- END PAGE LEVEL  STYLES -->
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -161,7 +162,7 @@
                 privateMessages[data.chat_id].push(pvt_msg);
                 chatData = {chat_id: data.chat_id, username: data.username, recepient: recepient}
                 buildPrivateChat(chatData);
-    
+
             });
 
             var recepient;
@@ -179,7 +180,7 @@
                         $('#btn-chat').focus().click();
                     }
                 });
-                
+
                 var msg = $('#input_' + chatID).val();
                 data = {message: msg, sender: userName, receiverid: receiverID, senderid: userid,
                     chat_id: chatID, username: currentusername, recepient: userID};
@@ -220,6 +221,44 @@
                 }
 
                 chatData = {chat_id: chatID, username: currentusername, recepient: recepient}
+            }
+
+            function showDocumentsMenu() {
+                $('.document-viewer-window').remove();
+                html = '<div class="document-viewer-window">';
+                html += '<div class="row document-window col-xs-5 col-md-3 documen_menu_window">';
+                html += '<div class="col-xs-12 col-md-12">';
+                html += '<div class="panel panel-default">';
+                
+                html += '<div class="panel-heading document-top-bar">';
+                    html += '<div class="col-md-8 col-xs-8">';
+                        html += '<h3 class="panel-title">Reference Materials </h3>';
+                    html += '</div>';
+                    html += '<div class="col-md-4 col-xs-4" style="text-align: right;">';
+                     html += '<span class="glyphicon glyphicon-remove icon_close"></span>';
+                    html += '</div>';           
+                html += '</div>';
+
+                html += '<div class="panel-body document_container_base" id="document_container_base">';
+                    html += '<br /><div class="list-group">'
+                        html += '<div class="list-group-item">';
+                            html += '<a class="list-group-item" href="#">Constitution</a>';
+                        html += '</div';
+                        html += '<div class="list-group-item">';
+                            html += '<a class="list-group-item" href="#">Standing Orders</a>';
+                        html += '</div';
+                        html += '<div class="list-group-item">';
+                            html += '<a class="list-group-item" href="#">Third Document</a>';
+                         html += '</div';
+                    html += '</div>'
+                html += '</div>';
+                
+                html += '</div>';
+                html += '</div>';
+                html += '</div>';
+                
+             $('body').append(html);
+
             }
 
         </script>
@@ -436,6 +475,7 @@
 
                 </div>
 
+                <!--<iframe width="400" height="280"  src="/ViewerJS/uploads/art.pdf"></iframe>-->
             </div>
             <!--END PAGE CONTENT -->
 
@@ -448,6 +488,7 @@
                     <button class="btn btn-primary btn-block"> Private Chat</button>
                     <button class="btn btn-success btn-block"> Group Chat</button>
                     <button class="btn btn-info btn-block"> Open Chat </button>
+                    <button onclick="showDocumentsMenu();" class="btn btn-danger btn-block"> Reference Materials </button>
                 </div>
 
                 <div class="panel panel-success">

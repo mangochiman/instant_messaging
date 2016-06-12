@@ -21,6 +21,7 @@ var model = require('./models/instantMessage');
 var app = express();
 var socket_io = require("socket.io");
 var io = socket_io();
+app.use('/ViewerJS',express.static(path.join(__dirname, 'ViewerJS')));
 app.io = io;
 //var socketRoutes = require('./routes/index')(io);
 
