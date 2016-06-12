@@ -25,6 +25,7 @@
         <link href="assets/plugins/flot/examples/examples.css" rel="stylesheet" />
         <link rel="stylesheet" href="assets/plugins/timeline/timeline.css" />
         <link rel="stylesheet" href="assets/plugins/validationengine/css/validationEngine.jquery.css" />
+        <link rel="stylesheet" href="assets/css/bootstrap-fileupload.min.css" />
         <!-- END PAGE LEVEL  STYLES -->
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -213,9 +214,42 @@
                             <div class="box">
 
                                 <div class="accordion-body collapse in body" id="collapseOne">
-                                    <form class="form-horizontal" action="/process_upload_documents" method="POST">
+                                    <form class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="control-label col-lg-4">Select Group</label>
+                                            <div class="col-lg-4">
+                                                <select required="true" name="group_id" class="form-control">
+                                                    <option value="">Select Here</option>
+                                                </select>
+                                            </div>
+                                        </div>
 
+                                        <div class="form-group">
+                                            <label class="control-label col-lg-4">Browse File</label>
+                                            <div class="col-lg-8">
+                                                <div data-provides="fileupload" class="fileupload fileupload-new">
+                                                    <div class="input-group">
+                                                        <span class="btn btn-file btn-info">
+                                                            <span class="fileupload-new">Select file</span>
+                                                            <span class="fileupload-exists">Change</span>
+                                                            <input type="file">
+                                                        </span> 
+                                                        <a data-dismiss="fileupload" class="btn btn-danger fileupload-exists" href="#">Remove</a>
 
+                                                        <br> <br>
+                                                        <div class="col-lg-3">
+                                                            <i class="icon-file fileupload-exists"></i>
+                                                            <span class="fileupload-preview"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-actions no-margin-bottom" style="text-align:center;">
+                                            <input type="submit" value="Submit Button" class="btn btn-primary ">
+                                            <button type="reset" class="btn btn-default">Reset Button</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -258,25 +292,9 @@
         <script src="assets/plugins/jquery-2.0.3.min.js"></script>
         <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="assets/plugins/jasny/js/bootstrap-fileupload.js"></script>
         <!-- END GLOBAL SCRIPTS -->
 
-        <!-- PAGE LEVEL SCRIPTS -->
-        <script src="assets/plugins/flot/jquery.flot.js"></script>
-        <script src="assets/plugins/flot/jquery.flot.resize.js"></script>
-        <script src="assets/plugins/flot/jquery.flot.time.js"></script>
-        <script  src="assets/plugins/flot/jquery.flot.stack.js"></script>
-        <script src="assets/js/for_index.js"></script>
-
-        <script src="assets/plugins/validationengine/js/jquery.validationEngine.js"></script>
-        <script src="assets/plugins/validationengine/js/languages/jquery.validationEngine-en.js"></script>
-        <script src="assets/plugins/jquery-validation-1.11.1/dist/jquery.validate.min.js"></script>
-        <script src="assets/js/validationInit.js"></script>
-
-        <script>
-            $(function () {
-                formValidation();
-            });
-        </script>
         <!-- END PAGE LEVEL SCRIPTS -->
 
 
