@@ -6,7 +6,13 @@ var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
 var loadUser = require('../force_login');
 var Promise = require('bluebird');
-console.log(require('../app'));
+var fs = require('fs');
+var mkdirp = require('mkdirp');
+var getDirName = require('path').dirname;
+var multer = require('multer');
+var upload = multer({dest: '/tmp'});
+var uploadPath = 'ViewerJS/uploads';
+var fse = require('fs-extra');
 
 
 User = model.User;
@@ -272,6 +278,11 @@ router.post('/create_member', function (req, res, next) {
 
 router.get('/upload_documents', loadUser, function (req, res, next) {
     var user = req.user.toJSON();
+    document_types = [
+        ['Constitution', 'constitution'],
+        ['Standing Orders', 'standing_orders'],
+        ['Unknown Category', 'unknown_category']
+    ]
     knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
         knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
             group_color = g[0].color;
@@ -295,13 +306,42 @@ router.get('/upload_documents', loadUser, function (req, res, next) {
 
                 return Promise.all(promises2)
             }).then(function (data) {
-                res.render('upload_documents', {groups: data, user: user, group_color: group_color});
+                res.render('upload_documents', {groups: data, user: user, group_color: group_color, document_types: document_types});
             });
         })
 
     })
 
 });
+
+router.post('/process_upload_documents', upload.single('file'), function (req, res, next) {
+    document_type = req.body.document_type;
+    if (req.file) {
+        filePath = req.file.path;
+        fileName = req.file.filename;
+        mimetype = req.file.mimetype;
+        console.log(mimetype)
+        documentPathUploads = uploadPath + '/' + document_type;
+        console.log(uploadPath)
+        newPath = documentPathUploads + '/' + fileName;
+
+        if (!fs.existsSync(documentPathUploads)) {
+            fs.mkdirSync(documentPathUploads);
+        }
+
+        fse.copy(filePath, newPath, function (err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                console.log("success!")
+                res.redirect('/upload_documents');
+            }
+        });
+
+    } else {
+        res.redirect('/upload_documents');
+    }
+})
 
 router.get('/delete_documents', loadUser, function (req, res, next) {
     var user = req.user.toJSON();
