@@ -37,7 +37,26 @@
         <script src="assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
         <script src="assets/js/hangout_like.js"></script>
         <script src="javascripts/socket.io.js"></script>
+        <style>
+            .modal-dialog {
+                width: 94%;
+                padding-top: 15px;
+            }
 
+            .modal-header {
+                padding: 6px;
+            }
+
+            .modal-footer {
+                margin-top: -16px;
+                padding: 19px 38px 12px;
+                text-align: right;
+            }
+            .modal-body{
+                padding: 1px;
+            }
+
+        </style>
         <script>
             var socket = io.connect('/');
             var userName = "<%= user.fname + ' ' + user.lname%>";
@@ -229,51 +248,61 @@
                 html += '<div class="row document-window col-xs-5 col-md-3 documen_menu_window">';
                 html += '<div class="col-xs-12 col-md-12">';
                 html += '<div class="panel panel-default">';
-                
+
                 html += '<div class="panel-heading document-top-bar">';
-                    html += '<div class="col-md-8 col-xs-8">';
-                        html += '<h3 class="panel-title">Reference Materials </h3>';
-                    html += '</div>';
-                    html += '<div class="col-md-4 col-xs-4" style="text-align: right;">';
-                     html += '<span class="glyphicon glyphicon-remove icon_close"></span>';
-                    html += '</div>';           
+                html += '<div class="col-md-8 col-xs-8">';
+                html += '<h3 class="panel-title">Reference Materials </h3>';
+                html += '</div>';
+                html += '<div class="col-md-4 col-xs-4" style="text-align: right;">';
+                html += '<span class="glyphicon glyphicon-remove icon_close"></span>';
+                html += '</div>';
                 html += '</div>';
 
                 html += '<div class="panel-body document_container_base" id="document_container_base">';
-                    html += '<br /><div class="list-group">'
-                        html += '<div class="list-group-item" onclick="showDocument(\'constitution\')">';
-                            html += '<a class="list-group-item" href="#">Constitution</a>';
-                        html += '</div>';
-                        html += '<div class="list-group-item" onclick="showDocument(\'standing_orders\')">';
-                            html += '<a class="list-group-item" href="#">Standing Orders</a>';
-                        html += '</div>';
-                        html += '<div class="list-group-item" onclick="showDocument(\'unknown\')">';
-                            html += '<a class="list-group-item" href="#">Third Document</a>';
-                         html += '</div>';
-                    html += '</div>'
+                html += '<br /><div class="list-group">'
+                html += '<div class="list-group-item" onclick="showDocument(\'constitution\')">';
+                html += '<a class="list-group-item" href="#">Constitution</a>';
                 html += '</div>';
-                
+                html += '<div class="list-group-item" onclick="showDocument(\'standing_orders\')">';
+                html += '<a class="list-group-item" href="#">Standing Orders</a>';
+                html += '</div>';
+                html += '<div class="list-group-item" onclick="showDocument(\'unknown\')">';
+                html += '<a class="list-group-item" href="#">Third Document</a>';
+                html += '</div>';
+                html += '</div>'
+                html += '</div>';
+
                 html += '</div>';
                 html += '</div>';
                 html += '</div>';
-                
-             $('body').append(html);
+
+                $('body').append(html);
 
             }
 
-        function showDocument(document_type){
-            console.log(document_type);
-            if (document_type === 'constitution'){
+            function showDocument(document_type) {
+                console.log(document_type);
                 
+                if (document_type === 'constitution') {
+                    header = "Constitution of Malawi";
+                }
+                if (document_type === 'standing_orders') {
+                    header = "Standing Orders"
+                }
+                if (document_type === 'unknown') {
+                    header = "Unknown Document"
+                }
+                $('#document').remove();
+                iframe = document.createElement('iframe');
+                iframe.setAttribute("id", "document")
+                iframe.setAttribute("width", "100%");
+                iframe.setAttribute("height", "680vh");
+                iframe.setAttribute("src", "/ViewerJS/uploads/test.pdf");
+                $('.modal-body')[0].appendChild(iframe);
+                $('#H2').html(header);
+                $('#documentModal').modal('show');
             }
-            if (document_type === 'standing_orders'){
-                
-            }
-            if (document_type === 'unknown'){
-                
-            }
-        }
-        
+
         </script>
     </head>
 
@@ -523,16 +552,29 @@
                 <!-- END RIGHT STRIP  SECTION -->
             </div>
 
-            <!--END MAIN WRAPPER -->
+            <!--MODAL START -->
+            <div class="row">
+                <div class="col-lg-1 row-fluid">
+                    <div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="H2">DOCUMENT</h4>
+                                </div>
+                                <div class="modal-body">
 
-            <!-- FOOTER -->
-            <!--<div id="footer">
-                <p>&copy;  binarytheme &nbsp;2014 &nbsp;</p>
-            </div>-->
-            <!--END FOOTER -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-
-            <!-- GLOBAL SCRIPTS -->
+            <!-- MODAL END -->
 
     </body>
 
