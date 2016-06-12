@@ -73,9 +73,11 @@ io.on('connection', function (socket) {
             data = merge_options(data, {logged_in_user_id: socket.logged_in_user_id});
             data = merge_options(data, {userids: userids});
             io.sockets.to(data.senderid).emit('update_current_user', data);
+            //io.sockets.to(data.senderid).emit('update_receiver_details', data);
             io.sockets.in(data.senderid).emit('message', data);
             io.sockets.to(data.receiverid).emit('update_current_user', data);
             io.sockets.in(data.receiverid).emit('message', data);
+            //io.sockets.to(data.receiverid).emit('update_receiver_details', data);
         } else {
             console.log('404')
         }

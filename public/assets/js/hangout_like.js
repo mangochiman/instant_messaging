@@ -52,7 +52,7 @@ function buildPrivateChat(data) {
     html += '<div class="panel panel-default">';
     html += '<div class="panel-heading top-bar">';
     html += '<div class="col-md-8 col-xs-8">';
-    html += '<h3 class="panel-title"><i class="icon-circle userid" style="color: green;"></i> ' + recepient + '</h3>';
+    html += '<h3 class="panel-title"><i class="icon-circle userid header_' + chatID + '" style="color: green;"></i> ' + currentusername + '</h3>';
     html += '</div>';
     html += '<div class="col-md-4 col-xs-4" style="text-align: right;">';
     html += '<span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span>';
