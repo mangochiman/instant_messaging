@@ -241,15 +241,15 @@
 
                 html += '<div class="panel-body document_container_base" id="document_container_base">';
                     html += '<br /><div class="list-group">'
-                        html += '<div class="list-group-item">';
+                        html += '<div class="list-group-item" onclick="showDocument(\'constitution\')">';
                             html += '<a class="list-group-item" href="#">Constitution</a>';
-                        html += '</div';
-                        html += '<div class="list-group-item">';
+                        html += '</div>';
+                        html += '<div class="list-group-item" onclick="showDocument(\'standing_orders\')">';
                             html += '<a class="list-group-item" href="#">Standing Orders</a>';
-                        html += '</div';
-                        html += '<div class="list-group-item">';
+                        html += '</div>';
+                        html += '<div class="list-group-item" onclick="showDocument(\'unknown\')">';
                             html += '<a class="list-group-item" href="#">Third Document</a>';
-                         html += '</div';
+                         html += '</div>';
                     html += '</div>'
                 html += '</div>';
                 
@@ -261,6 +261,19 @@
 
             }
 
+        function showDocument(document_type){
+            console.log(document_type);
+            if (document_type === 'constitution'){
+                
+            }
+            if (document_type === 'standing_orders'){
+                
+            }
+            if (document_type === 'unknown'){
+                
+            }
+        }
+        
         </script>
     </head>
 
