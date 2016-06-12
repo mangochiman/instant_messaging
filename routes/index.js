@@ -270,6 +270,77 @@ router.post('/create_member', function (req, res, next) {
     });
 });
 
+router.get('/upload_documents', loadUser, function (req, res, next) {
+    var user = req.user.toJSON();
+    knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
+        knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
+            group_color = g[0].color;
+            knex('group').then(function (groups) {
+                var promises = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
+                            .then(function (user_count) {
+                                group['members_count'] = user_count[0]["user_id"];
+                                return group;
+                            })
+                })
+
+                var promises2 = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
+                        group['group_members'] = users;
+                        return group
+                    })
+                })
+
+                return Promise.all(promises2)
+            }).then(function (data) {
+                res.render('upload_documents', {groups: data, user: user, group_color: group_color});
+            });
+        })
+
+    })
+
+});
+
+router.get('/delete_documents', loadUser, function (req, res, next) {
+    var user = req.user.toJSON();
+    knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
+        knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
+            group_color = g[0].color;
+            knex('group').then(function (groups) {
+                var promises = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
+                            .then(function (user_count) {
+                                group['members_count'] = user_count[0]["user_id"];
+                                return group;
+                            })
+                })
+
+                var promises2 = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
+                        group['group_members'] = users;
+                        return group
+                    })
+                })
+
+                return Promise.all(promises2)
+            }).then(function (data) {
+                res.render('delete_documents', {groups: data, user: user, group_color: group_color});
+            });
+        })
+
+    })
+
+});
+
+router.post('/process_delete_documents', loadUser, function (req, res, next) {
+
+})
+
+
 module.exports = function (io) {
     var app = require('express');
     var router = app.Router();

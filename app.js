@@ -180,6 +180,10 @@ app.use('/add_member', routes);
 app.use('/create_member', routes);
 app.use('/delete_member', routes);
 app.use('/process_delete_member', routes);
+app.use('/upload_documents', routes);
+app.use('/process_upload_documents', routes);
+app.use('/delete_documents', routes);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
