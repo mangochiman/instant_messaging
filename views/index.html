@@ -482,7 +482,11 @@
                             <% user = groups[group]["group_members"][i]; %>
                             <% uname =  user.fname + ' ' + user.lname %>
                             <% userID =  user.user_id %>
+                            <% if (current_user.user_id != userID) {%>
                             <li username='<%= uname%>' receiverid='<%= userID %>' onmousedown="updateStaticVariables(this)" onmouseup="buildPrivateChat();"><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
+                            <%} else {%>
+                            <li username='<%= uname%>' receiverid='<%= userID %>'><a href="#"><i class="icon-user"></i><i><b> <%= user.fname %> (Me)</b></i></a></li>
+                            <% }%>
                             <%}%>
                         </ul>
                     </li>

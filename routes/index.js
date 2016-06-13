@@ -89,7 +89,7 @@ router.get('/index', loadUser, function (req, res, next) {
 
                 return Promise.all(promises2)
             }).then(function (data) {
-                res.render('index', {groups: data, user: user, group_color: group_color, uploaded_files: uploadedFiles});
+                res.render('index', {groups: data, user: user, group_color: group_color, uploaded_files: uploadedFiles, current_user: user});
             });
         })
 
