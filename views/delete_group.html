@@ -38,14 +38,27 @@
                 groupID = obj.getAttribute("group_id")
                 $('#myModal').modal('show');
             }
-            
-            function deleteGroup(){
+
+            function deleteGroup() {
                 console.log(groupID);
                 groupIDInput = document.getElementById('group_id');
                 groupIDInput.value = groupID;
                 groupIDForm = document.getElementById("groupIDForm");
                 groupIDForm.submit();
             }
+            
+            function addGroup() {
+                window.location = '/add_group';
+            }
+
+            function addMember() {
+                window.location = '/add_member';
+            }
+
+            function deleteMember() {
+                window.location = '/delete_member';
+            }
+            
         </script>
     </head>
 
@@ -102,7 +115,7 @@
                             </ul>
 
                         </li>
-                        
+
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 Groups &nbsp;<i class="icon-chevron-down "></i>
@@ -200,7 +213,12 @@
                         <ul class="collapse" id="component-nav-<%= groups[group]['group_id'] %>">
 
                             <% for (var i in groups[group]["group_members"]){ %>
-                            <% user = groups[group]["group_members"][i]; %>
+                            <% user = groups[group]["group_members"][i]; 
+                                if (user.user_id == current_user.user_id){
+                                    myGroupID = groups[group]["group_id"];
+                                }
+                            
+                                %>
                             <li class=""><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
                             <%}%>
                         </ul>
@@ -247,7 +265,13 @@
                                                     <td><%= count %></td>
                                                     <td><%= groups_main[group].name %></td>
                                                     <td style="text-align:center;"><%= groupMembers[groups_main[group].group_id]%></td>
-                                                    <td style="text-align: center;"><button class="btn btn-danger btn-block" onclick="confirmAction(this)" group_id='<%= groups_main[group].group_id %>'><i class="icon-remove icon-white"></i> Delete</button></td>
+                                                    <td style="text-align: center;">
+                                                        <% if (groups_main[group].group_id != myGroupID){%>
+                                                        <button class="btn btn-danger btn-block" onclick="confirmAction(this)" group_id='<%= groups_main[group].group_id %>'><i class="icon-remove icon-white"></i> Delete</button>
+                                                        <%} else {%>
+                                                        <button class="btn btn-danger btn-block disabled"> <i class="icon-remove icon-white"></i> Delete</button>
+                                                        <% }%>
+                                                    </td>
                                                 </tr>
                                                 <% count = count + 1 %>
                                                 <%}%>
@@ -264,7 +288,7 @@
                     <form action="/process_delete_group" id="groupIDForm" method="POST" style="display: none;">
                         <input type="hidden" value="" id="group_id" name="group_id"></input>
                     </form>
-                    
+
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -291,11 +315,16 @@
                 </div>
 
             </div>
-            <!--END PAGE CONTENT -->
 
-            <!-- RIGHT STRIP  SECTION -->
+            <div id="right">
+                <div class="well well-small">
+                    <button onclick="addGroup();" class="btn btn-primary btn-block"> Add Group</button>
+                    <button onclick="addMember();" class="btn btn-primary btn-block"> Add Member</button>
+                    <button onclick="deleteMember();" class="btn btn-danger btn-block"> Delete Member</button>
+                </div>
+                <!-- END RIGHT STRIP  SECTION -->
+            </div>
 
-            <!-- END RIGHT STRIP  SECTION -->
         </div>
 
         <!--END MAIN WRAPPER -->
@@ -326,9 +355,9 @@
         <script src="assets/js/validationInit.js"></script>
 
         <script>
-            $(function () {
-                formValidation();
-            });
+                        $(function () {
+                            formValidation();
+                        });
         </script>
         <!-- END PAGE LEVEL SCRIPTS -->
 

@@ -31,22 +31,35 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
-        
+
         <script>
             var userID;
             function confirmAction(obj) {
                 userID = obj.getAttribute("user_id")
                 $('#myModal').modal('show');
             }
-            
-            function deleteGroup(){
+
+            function deleteGroup() {
                 userIDInput = document.getElementById('user_id');
                 userIDInput.value = userID;
                 userIDForm = document.getElementById("userIDForm");
                 userIDForm.submit();
             }
+
+            function addGroup() {
+                window.location = '/add_group';
+            }
+
+            function deleteGroup() {
+                window.location = '/delete_group';
+            }
+
+            function addMember() {
+                window.location = '/add_member';
+            }
+
         </script>
-        
+
     </head>
 
     <!-- END HEAD -->
@@ -102,7 +115,7 @@
                             </ul>
 
                         </li>
-                        
+
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 Groups &nbsp;<i class="icon-chevron-down "></i>
@@ -177,15 +190,15 @@
                     </li>
 
                     <% for (var group in groups){ %>
-                            <% 
-                                var dataToggle = ''; 
-                                var iconClass = ''
-                            %>
+                    <% 
+                    var dataToggle = ''; 
+                    var iconClass = ''
+                    %>
                     <% if (groups[group]["group_members"].length > 0){ %>
-                            <% 
-                            var dataToggle="collapse" 
-                            var iconClass = "icon-angle-left"
-                            %>
+                    <% 
+                    var dataToggle="collapse" 
+                    var iconClass = "icon-angle-left"
+                    %>
                     <%}%>
                     <li class="panel ">
                         <a href="#" data-parent="#menu" data-toggle='<%= dataToggle %>' class="accordion-toggle" data-target="#component-nav-<%= groups[group]['group_id'] %>">
@@ -197,7 +210,7 @@
                             &nbsp; <span class="label label-success"><%= groups[group]["members_count"]%></span>&nbsp;
                         </a>
                         <ul class="collapse" id="component-nav-<%= groups[group]['group_id'] %>">
-          
+
                             <% for (var i in groups[group]["group_members"]){ %>
                             <% user = groups[group]["group_members"][i]; %>
                             <li class=""><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
@@ -248,7 +261,13 @@
                                                     <td><%= users[user].fname %></td>
                                                     <td><%= users[user].lname %></td>
                                                     <td><%= users[user].username %></td>
-                                                    <td style="text-align: center;"><button class="btn btn-danger btn-block" onclick="confirmAction(this)" user_id='<%= users[user].user_id %>'><i class="icon-remove icon-white"></i> Delete</button></td>
+                                                    <td style="text-align: center;">
+                                                        <% if (current_user.user_id != users[user].user_id){%>
+                                                        <button class="btn btn-danger btn-block" onclick="confirmAction(this)" user_id='<%= users[user].user_id %>'><i class="icon-remove icon-white"></i> Delete</button>
+                                                        <% }else {%>
+                                                        <button class="btn btn-danger btn-block disabled"><i class="icon-remove icon-white"></i> Delete</button>
+                                                        <% }%>
+                                                    </td>
                                                 </tr>
                                                 <% count = count + 1 %>
                                                 <%}%>
@@ -260,7 +279,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <form action="/process_delete_member" id="userIDForm" method="POST" style="display: none;">
                         <input type="hidden" value="" id="user_id" name="user_id"></input>
                     </form>
@@ -290,11 +309,14 @@
                 </div>
 
             </div>
-            <!--END PAGE CONTENT -->
-
-            <!-- RIGHT STRIP  SECTION -->
-
-            <!-- END RIGHT STRIP  SECTION -->
+            <div id="right">
+                <div class="well well-small">
+                    <button onclick="addGroup();" class="btn btn-primary btn-block"> Add Group</button>
+                    <button onclick="deleteGroup();" class="btn btn-danger btn-block"> Delete Group</button>
+                    <button onclick="addMember();" class="btn btn-danger btn-block"> Add Member</button>
+                </div>
+                <!-- END RIGHT STRIP  SECTION -->
+            </div>
         </div>
 
         <!--END MAIN WRAPPER -->
@@ -318,9 +340,9 @@
         <script src="assets/js/validationInit.js"></script>
 
         <script>
-            $(function () {
-                formValidation();
-            });
+                        $(function () {
+                            formValidation();
+                        });
         </script>
         <!-- END PAGE LEVEL SCRIPTS -->
 

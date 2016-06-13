@@ -133,7 +133,7 @@ router.get('/sign_out', function (req, res, next) {
     }
 });
 
-router.get('/add_group', function (req, res, next) {
+router.get('/add_group', loadUser, function (req, res, next) {
 
     knex('group').then(function (groups) {
         var promises = groups.map(function (group) {
@@ -175,8 +175,9 @@ router.post('/create_group', function (req, res, next) {
 
 });
 
-router.get('/delete_group', function (req, res, next) {
+router.get('/delete_group', loadUser, function (req, res, next) {
     //groups_main = new model.Group().fetchAll();
+    var user = req.user.toJSON();
     new model.Group().fetchAll().then(function (groups_main) {
         groups_main = JSON.stringify(groups_main);
         knex('group').then(function (groups) {
@@ -193,13 +194,13 @@ router.get('/delete_group', function (req, res, next) {
                 group_id = group.group_id;
                 return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                     group['group_members'] = users;
-                    return group
+                    return group;
                 })
             })
 
             return Promise.all(promises2)
         }).then(function (data) {
-            res.render('delete_group', {groups: data, groups_main: JSON.parse(groups_main)});
+            res.render('delete_group', {groups: data, groups_main: JSON.parse(groups_main), current_user: user});
         })
     })
             ;
@@ -218,7 +219,7 @@ router.post('/process_delete_group', function (req, res, next) {
 })
 
 
-router.get('/add_member', function (req, res, next) {
+router.get('/add_member', loadUser, function (req, res, next) {
 
     knex('group').then(function (groups) {
         var promises = groups.map(function (group) {
@@ -244,7 +245,8 @@ router.get('/add_member', function (req, res, next) {
     });
 });
 
-router.get('/delete_member', function (req, res, next) {
+router.get('/delete_member', loadUser, function (req, res, next) {
+    var user = req.user.toJSON();
     new model.User().fetchAll().then(function (users) {
         users = JSON.stringify(users);
         knex('group').then(function (groups) {
@@ -267,7 +269,7 @@ router.get('/delete_member', function (req, res, next) {
 
             return Promise.all(promises2)
         }).then(function (data) {
-            res.render('delete_member', {groups: data, users: JSON.parse(users)});
+            res.render('delete_member', {groups: data, users: JSON.parse(users), current_user: user});
         });
     })
 });

@@ -31,6 +31,20 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
+        
+        <script>
+            function deleteGroup() {
+                window.location = '/delete_group';
+            }
+
+            function addGroup() {
+                window.location = '/add_group';
+            }
+
+            function deleteMember() {
+                window.location = '/delete_member';
+            }
+        </script>
     </head>
 
     <!-- END HEAD -->
@@ -282,11 +296,15 @@
                 </div>
 
             </div>
-            <!--END PAGE CONTENT -->
-
-            <!-- RIGHT STRIP  SECTION -->
-
-            <!-- END RIGHT STRIP  SECTION -->
+            
+            <div id="right">
+                <div class="well well-small">
+                    <button onclick="addGroup();" class="btn btn-primary btn-block"> Add Group</button>
+                    <button onclick="deleteGroup();" class="btn btn-danger btn-block"> Delete Group</button>
+                    <button onclick="deleteMember();" class="btn btn-danger btn-block"> Delete Member</button>
+                </div>
+                <!-- END RIGHT STRIP  SECTION -->
+            </div>
         </div>
 
         <!--END MAIN WRAPPER -->
