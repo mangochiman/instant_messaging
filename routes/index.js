@@ -383,6 +383,29 @@ router.post('/process_upload_documents', upload.single('file'), function (req, r
 
 router.get('/delete_documents', loadUser, function (req, res, next) {
     var user = req.user.toJSON();
+    
+    constitutionPath = uploadPath + '/constitution';
+    standingOrdersPath = uploadPath + '/standing_orders';
+    unknownCategoryPath = uploadPath + '/unknown_category';
+
+    constitutionFiles = [];
+    standingOrderFiles = [];
+    unknownCategoryFiles = [];
+
+    if (fs.existsSync(constitutionPath)) {
+        constitutionFiles = getFiles(constitutionPath);
+    }
+
+    if (fs.existsSync(standingOrdersPath)) {
+        standingOrderFiles = getFiles(standingOrdersPath);
+    }
+
+    if (fs.existsSync(unknownCategoryPath)) {
+        unknownCategoryFiles = getFiles(unknownCategoryPath);
+    }
+    
+    files = {constitution_files: constitutionFiles, standing_order_files: standingOrderFiles, unknown_category_files: unknownCategoryFiles}
+    
     knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
         knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
             group_color = g[0].color;
@@ -406,7 +429,7 @@ router.get('/delete_documents', loadUser, function (req, res, next) {
 
                 return Promise.all(promises2)
             }).then(function (data) {
-                res.render('delete_documents', {groups: data, user: user, group_color: group_color});
+                res.render('delete_documents', {groups: data, user: user, group_color: group_color, files: files});
             });
         })
 
