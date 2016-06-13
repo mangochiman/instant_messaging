@@ -31,6 +31,28 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
+        <script>
+            var documentType;
+            var fileName;
+
+            function confirmAction(obj) {
+                documentType = obj.getAttribute("document_type");
+                fileName = obj.getAttribute("file_name");
+                $('#myModal').modal('show');
+            }
+
+            function deleteFile() {
+                documentTypeInput = document.getElementById('document_type');
+                documentTypeInput.value = documentType;
+
+                fileNameInput = document.getElementById('file_name');
+                fileNameInput.value = fileName;
+
+                documentForm = document.getElementById("documentForm");
+                documentForm.submit();
+            }
+
+        </script>
     </head>
 
     <!-- END HEAD -->
@@ -234,7 +256,7 @@
                                                 <tr>
                                                     <td><%= count %></td>
                                                     <td><%= constitution_files[i] %></td>
-                                                    <td><button class="btn btn-danger btn-block"><i class="icon-remove icon-white"></i> Delete</button></td>
+                                                    <td><button document_type='constitution' file_name='<%= constitution_files[i] %>' onclick="confirmAction(this)" class="btn btn-danger btn-block"><i class="icon-remove icon-white"></i> Delete</button></td>
                                                 </tr>
                                                 <% count = count + 1 %>
                                                 <% }%>
@@ -265,7 +287,7 @@
                                                 <tr>
                                                     <td><%= count %></td>
                                                     <td><%= standing_order_files[i] %></td>
-                                                    <td><button class="btn btn-danger btn-block"><i class="icon-remove icon-white"></i> Delete</button></td>
+                                                    <td><button document_type='standing_orders' file_name='<%= standing_order_files[i] %>' onclick="confirmAction(this)" class="btn btn-danger btn-block"><i class="icon-remove icon-white"></i> Delete</button></td>
                                                 </tr>
                                                 <% count = count + 1 %>
                                                 <% } %>
@@ -299,7 +321,7 @@
                                                 <tr>
                                                     <td><%= count %></td>
                                                     <td><%= unknown_category_files[i] %></td>
-                                                    <td><button class="btn btn-danger btn-block"><i class="icon-remove icon-white"></i> Delete</button></td>
+                                                    <td><button document_type='unknown_category' file_name='<%= unknown_category_files[i] %>' onclick="confirmAction(this)" class="btn btn-danger btn-block"><i class="icon-remove icon-white"></i> Delete</button></td>
                                                 </tr>
                                                 <% count = count + 1 %>
                                                 <% } %>
@@ -311,18 +333,33 @@
                         </div>
 
                     </div>
-                    <!-- END COMMENT AND NOTIFICATION  SECTION -->
 
+                    <form action="/process_delete_documents" id="documentForm" method="POST" style="display: none;">
+                        <input type="hidden" value="" id="file_name" name="file_name"></input>
+                        <input type="hidden" value="" id="document_type" name="document_type"></input>
+                    </form>
 
-
-
-                    <!--  STACKING CHART  SECTION   -->
-
-                    <!--END STACKING CHART SCETION  -->
-
-                    <!--TABLE, PANEL, ACCORDION AND MODAL  -->
-
-                    <!--TABLE, PANEL, ACCORDION AND MODAL  -->
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">Confirm File Delete</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete the selected file? You can not UNDO the process
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="deleteFile();">Continue</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
                 </div>
@@ -348,25 +385,12 @@
         <script src="assets/plugins/jquery-2.0.3.min.js"></script>
         <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-        <!-- END GLOBAL SCRIPTS -->
-
-        <!-- PAGE LEVEL SCRIPTS -->
-        <script src="assets/plugins/flot/jquery.flot.js"></script>
-        <script src="assets/plugins/flot/jquery.flot.resize.js"></script>
-        <script src="assets/plugins/flot/jquery.flot.time.js"></script>
-        <script  src="assets/plugins/flot/jquery.flot.stack.js"></script>
-        <script src="assets/js/for_index.js"></script>
 
         <script src="assets/plugins/validationengine/js/jquery.validationEngine.js"></script>
         <script src="assets/plugins/validationengine/js/languages/jquery.validationEngine-en.js"></script>
         <script src="assets/plugins/jquery-validation-1.11.1/dist/jquery.validate.min.js"></script>
         <script src="assets/js/validationInit.js"></script>
 
-        <script>
-            $(function () {
-                formValidation();
-            });
-        </script>
         <!-- END PAGE LEVEL SCRIPTS -->
 
 
