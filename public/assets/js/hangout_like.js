@@ -62,19 +62,36 @@ function buildPrivateChat(data) {
     html += '<div class="panel-body msg_container_base" id="msg_container_base_' + chatID + '">';
 
     for (var i = 0; i <= private_messages.length - 1; i++) {
-        html += '<div class="row msg_container base_sent" id="msg_container_' + chatID + '">';
-        html += '<div class="col-md-10 col-xs-10">';
+            sender = private_messages[i][2]
+        if (sender === originalUserName) {
+            html += '<div class="row msg_container base_sent" id="msg_container_' + chatID + '">';
+            html += '<div class="col-md-10 col-xs-10">';
 
-        html += '<div class="messages msg_sent">';
-        html += '<p>' + private_messages[i][0] + '</p>';
-        html += '<time datetime="2009-11-13T20:00">Timothy • 51 min</time>';
-        html += '</div>';
+            html += '<div class="messages msg_sent">';
+            html += '<p>' + private_messages[i][0] + '</p>';
+            html += '<time style="font-weight: bold;">' + private_messages[i][2] + '</time>';
+            html += '</div>';
 
-        html += '</div>';
-        html += '<div class="col-md-2 col-xs-2 avatar">';
-        html += '<img src="assets/img/avata3.jpg" class=" img-responsive ">';
-        html += '</div>';
-        html += '</div>';
+            html += '</div>';
+            html += '<div class="col-md-2 col-xs-2 avatar">';
+            html += '<img src="assets/img/avata3.jpg" class=" img-responsive ">';
+            html += '</div>';
+            html += '</div>';
+        } else {
+            html += '<div class="row msg_container base_receive" id="msg_container_' + chatID + '">';
+            html += '<div class="col-md-2 col-xs-2 avatar">';
+            html += '<img src="assets/img/avata3.jpg" class=" img-responsive ">';
+            html += '</div>';
+            
+            html += '<div class="col-md-10 col-xs-10">';
+            html += '<div class="messages msg_receive">';
+            html += '<p>' + private_messages[i][0] + '</p>';
+            html += '<time style="font-weight: bold;">' + private_messages[i][2] + '</time>';
+            html += '</div>';
+            html += '</div>';
+            
+            html += '</div>';
+        }
     }
 
     html += '<div class="panel-footer">';
@@ -96,11 +113,11 @@ function buildPrivateChat(data) {
 
     $('body').append(html);
     resetPositions();
-    
+
     $('#msg_container_base_' + chatID).animate({
-        scrollTop: $('#msg_container_base_' + chatID).get(0).scrollHeight 
+        scrollTop: $('#msg_container_base_' + chatID).get(0).scrollHeight
     }, 0);
-    
+
     $('#input_' + chatID).keypress(function (e) {
         chatID = ($(this).attr('chat_id'));
         if (e.which === 13) {

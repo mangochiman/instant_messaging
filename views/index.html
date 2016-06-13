@@ -56,10 +56,16 @@
                 padding: 1px;
             }
 
+            .messages > time {
+                color: gray;
+                font-size: 10px;
+                font-style: italic;
+            }
         </style>
         <script>
             var socket = io.connect('/');
             var userName = "<%= user.fname + ' ' + user.lname%>";
+            var originalUserName = userName;
             var userid = parseInt("<%= user.user_id %>");
             var uID = "<%= user.user_id %>";
             var groupColor = "<%=group_color%>";
@@ -172,7 +178,7 @@
 
                 chatID = data.chat_id;
                 userid = data.senderid;
-                pvt_msg = [data.message, data.receiverid];
+                pvt_msg = [data.message, data.receiverid, data.sender];
                 recepient = data.recepient;
 
 
@@ -182,7 +188,7 @@
 
                 chatUserNames[data.chat_id] = data.username;
                 privateMessages[data.chat_id].push(pvt_msg);
-                chatData = {chat_id: data.chat_id, username: data.username, recepient: recepient}
+                chatData = {chat_id: data.chat_id, username: data.username, recepient: recepient, sender: data.sender}
                 buildPrivateChat(chatData);
 
             });
@@ -231,7 +237,6 @@
                 partnerID = parseInt(obj.getAttribute('receiverid'));
                 receiverID = parseInt(obj.getAttribute("receiverid"));
                 recepient = obj.getAttribute("username");
-                console.log(recepient)
                 currentusername = obj.getAttribute("username");
                 var participantIDs = [];
                 participantIDs.push((userid));
@@ -325,7 +330,7 @@
             function uploadNewFile() {
                 window.location = "/upload_documents";
             }
-            
+
         </script>
     </head>
 
