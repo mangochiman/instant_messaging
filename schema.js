@@ -32,7 +32,7 @@ CREATE TABLE `' + dbconfig.database + '`.`group` ( \
 connection.query('\
 CREATE TABLE `' + dbconfig.database + '`.`group_membership` ( \
     `group_id` INT UNSIGNED NOT NULL, \
-    `user_id` INT UNSIGNED NOT NULL, \
+    `user_id` INT UNSIGNED NOT NULL \
 )');
 
 connection.query('\
