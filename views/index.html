@@ -482,7 +482,7 @@
                             <% user = groups[group]["group_members"][i]; %>
                             <% uname =  user.fname + ' ' + user.lname %>
                             <% userID =  user.user_id %>
-                            <li class="" onclick="buildPrivateChat('<%= uname %>', '<%= userID %>');" ><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
+                            <li username='<%= uname%>' receiverid='<%= userID %>' onmousedown="updateStaticVariables(this)" onmouseup="buildPrivateChat();"><a href="#"><i class="icon-user"></i> <%= user.fname %> </a></li>
                             <%}%>
                         </ul>
                     </li>
