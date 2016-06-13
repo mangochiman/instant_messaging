@@ -354,6 +354,8 @@ router.get('/upload_documents', loadUser, function (req, res, next) {
 
 router.post('/process_upload_documents', upload.single('file'), function (req, res, next) {
     document_type = req.body.document_type;
+    original_file_name = req.body.file_name;
+
     if (req.file) {
         filePath = req.file.path;
         fileName = req.file.filename;
@@ -361,7 +363,7 @@ router.post('/process_upload_documents', upload.single('file'), function (req, r
         console.log(mimetype)
         documentPathUploads = uploadPath + '/' + document_type;
         console.log(uploadPath)
-        newPath = documentPathUploads + '/' + fileName;
+        newPath = documentPathUploads + '/' + original_file_name;
 
         if (!fs.existsSync(documentPathUploads)) {
             fs.mkdirSync(documentPathUploads);
