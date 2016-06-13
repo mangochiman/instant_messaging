@@ -52,6 +52,13 @@
                 documentForm.submit();
             }
 
+            function uploadDocuments() {
+                window.location = "/upload_documents";
+            }
+            
+            function viewDocuments() {
+                window.location = "/view_documents";
+            }
         </script>
     </head>
 
@@ -365,11 +372,13 @@
                 </div>
 
             </div>
-            <!--END PAGE CONTENT -->
-
-            <!-- RIGHT STRIP  SECTION -->
-
-            <!-- END RIGHT STRIP  SECTION -->
+            <div id="right">
+                <div class="well well-small">
+                    <button onclick="uploadDocuments();" class="btn btn-primary btn-block"> Upload Documents</button>
+                    <button onclick="viewDocuments();" class="btn btn-info btn-block"> View Documents</button>
+                </div>
+                <!-- END RIGHT STRIP  SECTION -->
+            </div>
         </div>
 
         <!--END MAIN WRAPPER -->

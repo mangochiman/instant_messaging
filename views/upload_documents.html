@@ -38,6 +38,15 @@
                 fileNameInput = document.getElementById('file_name');
                 fileNameInput.value = fileName;
             }
+            
+            function viewDocuments(){
+                window.location = "/view_documents";
+            }
+            
+            function deleteDocuments(){
+                window.location = "/delete_documents";
+            }   
+            
         </script>
     </head>
 
@@ -270,6 +279,8 @@
                             </div>
                         </div>
                     </div>
+                    
+                    
                     <!-- END COMMENT AND NOTIFICATION  SECTION -->
 
 
@@ -292,11 +303,19 @@
             <!-- RIGHT STRIP  SECTION -->
 
             <!-- END RIGHT STRIP  SECTION -->
+            <div id="right">
+                <div class="well well-small">
+                    <button onclick="viewDocuments();" class="btn btn-info btn-block"> View Documents</button>
+                    <button onclick="deleteDocuments();" class="btn btn-danger btn-block"> Delete Documents</button>
+                </div>
+                <!-- END RIGHT STRIP  SECTION -->
+            </div>
         </div>
 
         <!--END MAIN WRAPPER -->
 
         <!-- FOOTER -->
+        
         <div id="footer">
             <p>&copy;  binarytheme &nbsp;2014 &nbsp;</p>
         </div>
