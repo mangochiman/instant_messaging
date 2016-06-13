@@ -27,6 +27,44 @@ router.get('/', /*loadUser,*/ function (req, res, next) {
 
 router.get('/index', loadUser, function (req, res, next) {
     var user = req.user.toJSON();
+    date = new Date();
+    year = date.getFullYear();
+    month = date.getMonth() + 1
+    day = date.getDate();
+    todays_date = year + '_' + month + '_' + day;
+    
+    constitutionPath = uploadPath + '/constitution';
+    standingOrdersPath = uploadPath + '/standing_orders';
+    unknownCategoryPath = uploadPath + '/unknown_category';
+
+    constitution = '';
+    standingOrder = '';
+    unknownCategory = '';
+
+    if (fs.existsSync(constitutionPath)) {
+        files = getFiles(constitutionPath);
+        if (files.length > 0) {
+            constitution = files[files.length - 1];
+        }
+    }
+
+    if (fs.existsSync(standingOrdersPath)) {
+        files = getFiles(standingOrdersPath);
+        if (files.length > 0) {
+            standingOrder = files[files.length - 1];
+        }
+    }
+
+    if (fs.existsSync(unknownCategoryPath)) {
+        files = getFiles(unknownCategoryPath);
+        if (files.length > 0) {
+            unknownCategory = files[files.length - 1];
+        }
+    }
+    
+    uploadedFiles = {constitution: constitution, standingOrder: standingOrder, unknownCategory: unknownCategory};
+    console.log(uploadedFiles);
+
     knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
         knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
             group_color = g[0].color;
@@ -50,7 +88,7 @@ router.get('/index', loadUser, function (req, res, next) {
 
                 return Promise.all(promises2)
             }).then(function (data) {
-                res.render('index', {groups: data, user: user, group_color: group_color});
+                res.render('index', {groups: data, user: user, group_color: group_color, uploaded_files: uploadedFiles});
             });
         })
 
@@ -380,6 +418,20 @@ router.post('/process_delete_documents', loadUser, function (req, res, next) {
 
 })
 
+function getFiles(dir, files_) {
+    files_ = files_ || [];
+    var files = fs.readdirSync(dir);
+    for (var i in files) {
+        var name = dir + '/' + files[i];
+        if (fs.statSync(name).isDirectory()) {
+            getFiles(name, files_);
+        } else {
+            //files_.push(name);
+            files_.push(files[i]);
+        }
+    }
+    return files_;
+}
 
 module.exports = function (io) {
     var app = require('express');

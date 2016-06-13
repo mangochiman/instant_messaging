@@ -38,21 +38,21 @@
         <script src="assets/js/hangout_like.js"></script>
         <script src="javascripts/socket.io.js"></script>
         <style>
-            .modal-dialog {
+            #documentModal .modal-dialog {
                 width: 94%;
                 padding-top: 15px;
             }
 
-            .modal-header {
+            #documentModal .modal-header {
                 padding: 6px;
             }
 
-            .modal-footer {
+            #documentModal .modal-footer {
                 margin-top: -16px;
                 padding: 19px 38px 12px;
                 text-align: right;
             }
-            .modal-body{
+            #documentModal .modal-body{
                 padding: 1px;
             }
 
@@ -69,6 +69,9 @@
             var receiverID;
             var privateMessages = {};
             var chatData;
+            var constitutionFile = '<%= uploaded_files.constitution %>';
+            var standingOrderFile = '<%= uploaded_files.standingOrder %>';
+            var unknownCategoryFile = '<%= uploaded_files.unknownCategory %>';
 
             var userData = {username: userName, usercolor: groupColor, userid: userid};
             var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
@@ -282,27 +285,47 @@
 
             function showDocument(document_type) {
                 console.log(document_type);
-                
+                path = '';
+
                 if (document_type === 'constitution') {
                     header = "Constitution of Malawi";
+                    if (constitutionFile.length > 0)
+                        path = '/ViewerJS/uploads/constitution/' + constitutionFile;
                 }
+
                 if (document_type === 'standing_orders') {
-                    header = "Standing Orders"
+                    header = "Standing Orders";
+                    if (standingOrderFile.length > 0)
+                        path = '/ViewerJS/uploads/standing_orders/' + standingOrderFile;
                 }
+
                 if (document_type === 'unknown') {
-                    header = "Unknown Document"
+                    header = 'Unknown Category';
+                    if (unknownCategoryFile.length > 0)
+                        path = '/ViewerJS/uploads/unknown_category/' + unknownCategoryFile;
                 }
+
                 $('#document').remove();
-                iframe = document.createElement('iframe');
-                iframe.setAttribute("id", "document")
-                iframe.setAttribute("width", "100%");
-                iframe.setAttribute("height", "680vh");
-                iframe.setAttribute("src", "/ViewerJS/uploads/test.pdf");
-                $('.modal-body')[0].appendChild(iframe);
-                $('#H2').html(header);
-                $('#documentModal').modal('show');
+                if (path.length > 0) {
+                    iframe = document.createElement('iframe');
+                    iframe.setAttribute("id", "document")
+                    iframe.setAttribute("width", "100%");
+                    iframe.setAttribute("height", "680vh");
+                    iframe.setAttribute("src", path);
+                    $('.modal-body')[0].appendChild(iframe);
+                    $('#H2').html(header);
+                    $('#documentModal').modal('show');
+                } else {
+                    $('#notificationModal').modal('show');
+                }
+
+
             }
 
+            function uploadNewFile() {
+                window.location = "/upload_documents";
+            }
+            
         </script>
     </head>
 
@@ -358,7 +381,7 @@
                             </ul>
 
                         </li>
-                        
+
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 Groups &nbsp;<i class="icon-chevron-down "></i>
@@ -588,6 +611,23 @@
 
             <!-- MODAL END -->
 
+
+            <div class="col-lg-12">
+                <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="notificationModal" class="modal in">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h4 id="myModalLabel" class="modal-title">Document Not Found</h4>
+                            </div>
+                            <div class="modal-body">
+                                No File  was found for the selected category.
+                                <button onclick="uploadNewFile();" class="btn btn-primary"><i class="icon-upload icon-white"></i> Click Here to upload </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </body>
 
     <!-- END BODY -->
