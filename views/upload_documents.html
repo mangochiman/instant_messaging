@@ -38,15 +38,15 @@
                 fileNameInput = document.getElementById('file_name');
                 fileNameInput.value = fileName;
             }
-            
-            function viewDocuments(){
+
+            function viewDocuments() {
                 window.location = "/view_documents";
             }
-            
-            function deleteDocuments(){
+
+            function deleteDocuments() {
                 window.location = "/delete_documents";
-            }   
-            
+            }
+
         </script>
     </head>
 
@@ -232,7 +232,7 @@
                                     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
                                     NOTE: <b style="color: red;">PDF</b> documents are recommended for compatibility purposes
                                 </div>
-                                
+
                                 <div class="accordion-body collapse in body" id="collapseOne">
                                     <form class="form-horizontal" action="/process_upload_documents" method="POST" enctype="multipart/form-data">
                                         <div class="form-group">
@@ -267,20 +267,22 @@
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="file_name" id="file_name" value=""/>
+                                                <div>
+                                                    <input type="submit" value="Submit Button" class="btn btn-primary ">
+                                                    <button type="reset" class="btn btn-default">Reset Button</button>
+                                                </div>
                                             </div>
+
                                         </div>
 
-                                        <div class="form-actions no-margin-bottom" style="text-align:center;">
-                                            <input type="submit" value="Submit Button" class="btn btn-primary ">
-                                            <button type="reset" class="btn btn-default">Reset Button</button>
-                                        </div>
+
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+
                     <!-- END COMMENT AND NOTIFICATION  SECTION -->
 
 
@@ -315,7 +317,7 @@
         <!--END MAIN WRAPPER -->
 
         <!-- FOOTER -->
-        
+
         <div id="footer">
             <p>&copy;  binarytheme &nbsp;2014 &nbsp;</p>
         </div>

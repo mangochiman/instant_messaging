@@ -463,6 +463,62 @@ router.post('/process_delete_documents', loadUser, function (req, res, next) {
     res.redirect('/delete_documents');
 })
 
+router.get('/view_documents', loadUser, function (req, res, next) {
+    var user = req.user.toJSON();
+
+    constitutionPath = uploadPath + '/constitution';
+    standingOrdersPath = uploadPath + '/standing_orders';
+    unknownCategoryPath = uploadPath + '/unknown_category';
+
+    constitutionFiles = [];
+    standingOrderFiles = [];
+    unknownCategoryFiles = [];
+
+    if (fs.existsSync(constitutionPath)) {
+        constitutionFiles = getFiles(constitutionPath);
+    }
+
+    if (fs.existsSync(standingOrdersPath)) {
+        standingOrderFiles = getFiles(standingOrdersPath);
+    }
+
+    if (fs.existsSync(unknownCategoryPath)) {
+        unknownCategoryFiles = getFiles(unknownCategoryPath);
+    }
+
+    files = {constitution_files: constitutionFiles, standing_order_files: standingOrderFiles, unknown_category_files: unknownCategoryFiles}
+
+    knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
+        knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
+            group_color = g[0].color;
+            knex('group').then(function (groups) {
+                var promises = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('group_membership').where({group_id: group_id}).count("user_id as user_id")
+                            .then(function (user_count) {
+                                group['members_count'] = user_count[0]["user_id"];
+                                return group;
+                            })
+                })
+
+                var promises2 = groups.map(function (group) {
+                    group_id = group.group_id;
+                    return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
+                        group['group_members'] = users;
+                        return group
+                    })
+                })
+
+                return Promise.all(promises2)
+            }).then(function (data) {
+                res.render('view_documents', {groups: data, user: user, group_color: group_color, files: files});
+            });
+        })
+
+    })
+
+});
+
 function getFiles(dir, files_) {
     files_ = files_ || [];
     var files = fs.readdirSync(dir);
