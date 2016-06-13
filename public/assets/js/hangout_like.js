@@ -46,7 +46,7 @@ function buildPrivateChat(data) {
     }
 
     private_messages = privateMessages[chatID];
-    
+
     html = '<div class="private-chat ' + chatID + '" id=' + chatID + '>';
     html += '<div class="row chat-window col-xs-5 col-md-3 chat_window">';
     html += '<div class="col-xs-12 col-md-12">';
@@ -96,7 +96,11 @@ function buildPrivateChat(data) {
 
     $('body').append(html);
     resetPositions();
-
+    
+    $('#msg_container_base_' + chatID).animate({
+        scrollTop: $('#msg_container_base_' + chatID).get(0).scrollHeight 
+    }, 0);
+    
     $('#input_' + chatID).keypress(function (e) {
         chatID = ($(this).attr('chat_id'));
         if (e.which === 13) {
