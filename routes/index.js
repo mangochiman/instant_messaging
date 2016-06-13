@@ -82,6 +82,7 @@ router.get('/index', loadUser, function (req, res, next) {
                     group_id = group.group_id;
                     return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                         group['group_members'] = users;
+                        group['color'] = group.color;
                         return group
                     })
                 })
@@ -149,6 +150,7 @@ router.get('/add_group', loadUser, function (req, res, next) {
             group_id = group.group_id;
             return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                 group['group_members'] = users;
+                group['color'] = group.color;
                 return group
             })
         })
@@ -194,6 +196,7 @@ router.get('/delete_group', loadUser, function (req, res, next) {
                 group_id = group.group_id;
                 return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                     group['group_members'] = users;
+                    group['color'] = group.color;
                     return group;
                 })
             })
@@ -235,6 +238,7 @@ router.get('/add_member', loadUser, function (req, res, next) {
             group_id = group.group_id;
             return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                 group['group_members'] = users;
+                group['color'] = group.color;
                 return group
             })
         })
@@ -263,6 +267,7 @@ router.get('/delete_member', loadUser, function (req, res, next) {
                 group_id = group.group_id;
                 return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                     group['group_members'] = users;
+                    group['color'] = group.color;
                     return group
                 })
             })
@@ -340,6 +345,7 @@ router.get('/upload_documents', loadUser, function (req, res, next) {
                     group_id = group.group_id;
                     return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                         group['group_members'] = users;
+                        group['color'] = group.color;
                         return group
                     })
                 })
@@ -427,6 +433,7 @@ router.get('/delete_documents', loadUser, function (req, res, next) {
                     group_id = group.group_id;
                     return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                         group['group_members'] = users;
+                        group['color'] = group.color;
                         return group
                     })
                 })
@@ -507,7 +514,8 @@ router.get('/view_documents', loadUser, function (req, res, next) {
                     group_id = group.group_id;
                     return knex('user').join('group_membership', 'user.user_id', '=', 'group_membership.user_id').where({group_id: group_id}).then(function (users) {
                         group['group_members'] = users;
-                        return group
+                        group['color'] = group.color;
+                        return group;
                     })
                 })
 
