@@ -70,6 +70,8 @@ io.on('connection', function (socket) {
         //socket.broadcast.to(room).emit('message', data);
         console.log('First Room = ' + first_room + ' Second Room = ' + second_room)
         chat_id = data.chat_id;
+        //console.log('Chat ID = ' + chat_id)
+        console.log('RoomID  = ' + first_room + 'Chat ID = ' + chat_id)
         if (chat_id.match(first_room)) {
             data = merge_options(data, {logged_in_user_id: socket.logged_in_user_id});
             data = merge_options(data, {userids: userids});

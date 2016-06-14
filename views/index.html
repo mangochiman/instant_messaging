@@ -172,6 +172,7 @@
             }
 
             socket.on('message', function (data) {
+                console.log("Message received")
                 logged_in_user_id = data.logged_in_user_id;
                 partnerID = data.senderid;
                 receiverID = data.receiverid;
@@ -202,8 +203,9 @@
             {
                 chatID = $(obj).attr('chat_id');
                 userID = $(obj).attr('username');
-                receiverID = $(obj).attr('receiverID');
-                console.log('Receiver ID = ' + receiverID);
+                receiverID = $(obj).attr('receiverid');
+                
+                console.log('Sender ID = ' + uID + ' Receiver ID = ' + receiverID);
 
                 $('#btn-input').keypress(function (e) {
                     if (e.which === 13) {
@@ -213,7 +215,7 @@
                 });
 
                 var msg = $('#input_' + chatID).val();
-                data = {message: msg, sender: userName, receiverid: receiverID, senderid: userid,
+                data = {message: msg, sender: userName, receiverid: receiverID, senderid: uID,
                     chat_id: chatID, username: currentusername, recepient: userID};
                 socket.emit('message', data);
             }
@@ -237,12 +239,13 @@
 
             var chatUserNames = {}
             function updateStaticVariables(obj) {
+                console.log('Logged in user = ' + uID);
                 partnerID = parseInt(obj.getAttribute('receiverid'));
                 receiverID = parseInt(obj.getAttribute("receiverid"));
                 recepient = obj.getAttribute("username");
                 currentusername = obj.getAttribute("username");
                 var participantIDs = [];
-                participantIDs.push((userid));
+                participantIDs.push((uID));
                 participantIDs.push(partnerID);
                 chatID = participantIDs.sort().join('_');
 

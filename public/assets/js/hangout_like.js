@@ -45,9 +45,16 @@ function buildPrivateChat(data) {
         chatID = chatData.chat_id;
     }
 
-    if (recepient === originalUserName){
+    if (recepient === originalUserName) {
         recepient = data.sender;
     }
+    var array = chatID.split('_');
+    var index = array.indexOf(uID);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+    receiverID = array.join('');
+
     private_messages = privateMessages[chatID];
     html = '<div class="private-chat ' + chatID + '" id=' + chatID + '>';
     html += '<div class="row chat-window col-xs-5 col-md-3 chat_window">';
@@ -64,7 +71,7 @@ function buildPrivateChat(data) {
     html += '<div class="panel-body msg_container_base" id="msg_container_base_' + chatID + '">';
 
     for (var i = 0; i <= private_messages.length - 1; i++) {
-            sender = private_messages[i][2]
+        sender = private_messages[i][2]
         if (sender === originalUserName) {
             html += '<div class="row msg_container base_sent" id="msg_container_' + chatID + '">';
             html += '<div class="col-md-10 col-xs-10">';
@@ -84,14 +91,14 @@ function buildPrivateChat(data) {
             html += '<div class="col-md-2 col-xs-2 avatar">';
             html += '<img src="assets/img/avata3.jpg" class=" img-responsive ">';
             html += '</div>';
-            
+
             html += '<div class="col-md-10 col-xs-10">';
             html += '<div class="messages msg_receive">';
             html += '<p>' + private_messages[i][0] + '</p>';
             html += '<time style="font-weight: bold;">' + private_messages[i][2] + '</time>';
             html += '</div>';
             html += '</div>';
-            
+
             html += '</div>';
         }
     }
@@ -127,7 +134,7 @@ function buildPrivateChat(data) {
             $('#btn_' + chatID).focus().click();
         }
     });
-    
+
 }
 
 function resetPositions() {
