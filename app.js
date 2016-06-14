@@ -78,6 +78,7 @@ io.on('connection', function (socket) {
         if (group_chat_room.match(user_id)) {
             for (var i=0; i<=group_chat_room_ids.length - 1; i++){
                 console.log('Broadcasting to room ' + group_chat_room_ids[i]);
+                io.sockets.to(group_chat_room_ids[i]).emit('updateGroupNotification', data);
                 io.sockets.in(group_chat_room_ids[i]).emit('updateGroupMessage', data);
                 //sending to individual users
             }

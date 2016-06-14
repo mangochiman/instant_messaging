@@ -26,6 +26,7 @@
         <link rel="stylesheet" href="assets/plugins/timeline/timeline.css" />
         <link rel="stylesheet" href="assets/css/hangout_like.css" />
         <link rel="stylesheet" href="assets/css/document_menu.css" />
+        <link href="assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />
         <!-- END PAGE LEVEL  STYLES -->
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -35,6 +36,7 @@
         <script src="assets/plugins/jquery-2.0.3.min.js"></script>
         <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+         <script src="assets/plugins/gritter/js/jquery.gritter.js"></script>
         <script src="assets/js/hangout_like.js"></script>
         <script src="javascripts/socket.io.js"></script>
         <style>
@@ -108,7 +110,6 @@
 
 
             socket.on('updatechat', function (userdata, data) {
-                console.log("Data ================ " + data);
                 color = colors[userdata.usercolor];
                 btn_style = userdata.usercolor;
                 userID = data.userid;
@@ -217,7 +218,6 @@
             });
 
             socket.on('updateGroupMessage', function (data) {
-                console.log("Data ================ " + data);
                 userID = data.userid;
                 color = colors[groupColor];
                 html = '<ul class="chat">';
@@ -261,6 +261,18 @@
                 }
             })
 
+            socket.on('updateGroupNotification', function (data) {
+                if (data.userid !== uID) {
+                    $.gritter.add({
+                        title: data.username,
+                        text: 'Has sent a message to <b><%= group_name %></b> group chat. Click On Group Chat Button to View',
+                        sticky: false,
+                        time: '',
+                        class_name: 'my-sticky-class'
+                    });
+                }
+            });
+            
             var recepient;
 
             function sendPrivateMessage(obj)
@@ -417,7 +429,7 @@
             }
 
             function showGrouppopupChat() {
-                $('#groupPopupChat').modal('show')
+                $('#groupPopupChat').modal('show');
             }
         </script>
     </head>
@@ -773,4 +785,15 @@
             </body>
         
             <!-- END BODY -->
+            <script>
+                    /*function showGroupChatNotification(){
+                        $.gritter.add({
+                            title: 'New Group Message',
+                            text: 'You have received a group message. Cick On Group Chat Button to View',
+                            sticky: false,
+                            time: '',
+                            class_name: 'my-sticky-class'
+                        });
+                    }*/                  
+            </script>
 </html>
