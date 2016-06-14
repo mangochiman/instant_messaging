@@ -89,6 +89,7 @@
 
 
             socket.on('updatechat', function (userdata, data) {
+                console.log("Data ================ " + data);
                 color = colors[userdata.usercolor];
                 btn_style = userdata.usercolor;
                 userID = data.userid;
@@ -125,11 +126,12 @@
                 html += '</div>';
                 html += '</li>';
                 html += '</ul>';
-
-                $('.chat-content').append(html);
-                $('.chat-content').animate({
-                    scrollTop: $('.panel-body').get(0).scrollHeight
-                }, 1500);
+                if (data.length > 0) {
+                    $('.chat-content').append(html);
+                    $('.chat-content').animate({
+                        scrollTop: $('.panel-body').get(0).scrollHeight
+                    }, 1500);
+                }
 
             });
 
