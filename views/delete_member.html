@@ -39,7 +39,7 @@
                 $('#myModal').modal('show');
             }
 
-            function deleteGroup() {
+            function deleteMember() {
                 userIDInput = document.getElementById('user_id');
                 userIDInput.value = userID;
                 userIDForm = document.getElementById("userIDForm");
@@ -294,11 +294,11 @@
                                             <h4 class="modal-title" id="myModalLabel">Confirm Delete Group</h4>
                                         </div>
                                         <div class="modal-body">
-                                            Are you sure you want to delete the selected group? You can not UNDO the process
+                                            Are you sure you want to delete the selected user? You can not UNDO the process
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" onclick="deleteGroup();">Continue</button>
+                                            <button type="button" class="btn btn-primary" onclick="deleteMember();">Continue</button>
                                         </div>
                                     </div>
                                 </div>

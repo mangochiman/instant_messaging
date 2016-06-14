@@ -21,7 +21,7 @@ var model = require('./models/instantMessage');
 var app = express();
 var socket_io = require("socket.io");
 var io = socket_io();
-app.use('/ViewerJS',express.static(path.join(__dirname, 'ViewerJS')));
+app.use('/ViewerJS', express.static(path.join(__dirname, 'ViewerJS')));
 app.io = io;
 //var socketRoutes = require('./routes/index')(io);
 
@@ -62,6 +62,28 @@ io.on('connection', function (socket) {
         userids[chatData.logged_in_user] = chatData.logged_in_user;
         room = chatData.room_id;
         socket.join(room);
+    })
+
+    socket.on('join group chat', function (group_chat_id) {
+        console.log('Joining Group Chat Room ' + group_chat_id);
+        socket.group_room = group_chat_id;
+        socket.join(group_chat_id);
+    })
+
+    socket.on('sendGroupchat', function (data) {
+        group_chat_room = socket.group_room;
+        group_chat_room_ids = group_chat_room.split('_')
+        user_id = data.userid;
+        console.log('Group Chat Id = ' + group_chat_room + ' User ID=' + user_id + ' Group ID = ' + data.group_id);
+        if (group_chat_room.match(user_id)) {
+            for (var i=0; i<=group_chat_room_ids.length - 1; i++){
+                console.log('Broadcasting to room ' + group_chat_room_ids[i]);
+                io.sockets.in(group_chat_room_ids[i]).emit('updateGroupMessage', data);
+                //sending to individual users
+            }
+        } else {
+            console.log('User does not belong to this group');
+        }
     })
 
     socket.on('message', function (data) {

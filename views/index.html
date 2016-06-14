@@ -63,6 +63,22 @@
             }
         </style>
         <script>
+
+           <%
+            group_member_ids = [];
+            total_members = 0
+            for (var group in groups){%>
+            <%if (groups[group]["group_id"] === group_id) {
+                members = groups[group]["group_members"];
+                total_members = members.length;
+                for (var i = 0; i <= members.length - 1; i++) {
+                    group_member_ids.push(members[i]["user_id"]);
+                }
+               }%>
+            <%}%>
+        
+           var group_member_ids = "<%= group_member_ids.join('_') %>"
+
             var socket = io.connect('/');
             var userName = "<%= user.fname + ' ' + user.lname%>";
             var originalUserName = userName;
@@ -78,13 +94,16 @@
             var constitutionFile = '<%= uploaded_files.constitution %>';
             var standingOrderFile = '<%= uploaded_files.standingOrder %>';
             var unknownCategoryFile = '<%= uploaded_files.unknownCategory %>';
-
+            var groupID = '<%= group_id %>';
+            var groupName = '<%= group_name %>'
+            
             var userData = {username: userName, usercolor: groupColor, userid: userid};
             var colors = {default: '#3276b1', warning: '#ed9c28', info: '#39b3d7', danger: '#d2322d'}
             socket.on('connect', function () {
                 socket.emit('adduser', userData);
                 chatData = {room_id: userid, logged_in_user: userid};
                 socket.emit('join room', chatData);
+                socket.emit('join group chat', group_member_ids);
             });
 
 
@@ -197,6 +216,51 @@
 
             });
 
+            socket.on('updateGroupMessage', function (data) {
+                console.log("Data ================ " + data);
+                userID = data.userid;
+                color = colors[groupColor];
+                html = '<ul class="chat">';
+                html += '<li class="left clearfix">';
+
+                if (data.userid === uID) {
+                    html += '<span class="chat-img pull-left">';
+                    //html += "<button class='btn btn-" + btn_style + " btn-circle btn-xl pull-left'></button>";
+                    html += '</span>';
+                    html += '<div class="chat-body clearfix">';
+                    html += '<div class="header">';
+                    html += '<strong class="primary-font "><span style="color: ' + color + '">' + data.username + '</span></strong>';
+                    html += '<small class="pull-right  text-muted">';
+                    html += '<i class="pull-right icon-time"></i> 12 mins ago';
+                }
+                else {
+                    html += '<span class="chat-img pull-right">';
+                    //html += "<button class='btn btn-" + btn_style + " btn-circle btn-xl pull-right'></button>";
+                    html += '</span>';
+                    html += '<div class="chat-body clearfix">';
+                    html += '<div class="header">';
+                    html += '<strong class="pull-right primary-font "><span style="color: ' + color + '">' + data.username + '</span></strong>';
+                    html += '<small class="pull-left  text-muted">';
+                    html += '<i class="pull-left icon-time"></i> 12 mins ago';
+                }
+
+                html += '</small>';
+                html += '</div>';
+                html += '<br />';
+                html += '<p>';
+                html += data.message;
+                html += '</p>';
+                html += '</div>';
+                html += '</li>';
+                html += '</ul>';
+                if (data.message.length > 0) {
+                    $('.group-chat').append(html);
+                    $('.group-chat').animate({
+                        scrollTop: $('.group-chat').get(0).scrollHeight
+                    }, 1500);
+                }
+            })
+
             var recepient;
 
             function sendPrivateMessage(obj)
@@ -204,7 +268,7 @@
                 chatID = $(obj).attr('chat_id');
                 userID = $(obj).attr('username');
                 receiverID = $(obj).attr('receiverid');
-                
+
                 console.log('Sender ID = ' + uID + ' Receiver ID = ' + receiverID);
 
                 $('#btn-input').keypress(function (e) {
@@ -235,6 +299,21 @@
                     }
                 });
 
+                $('#group-btn-chat').click(function () {
+                    var groupMessage = $('#group-btn-input').val();
+                    $('#group-btn-input').val('');
+                    console.log(groupMessage);
+                    groupData = {message: groupMessage, userid: uID, group_id: groupID, username: originalUserName}
+                    socket.emit('sendGroupchat', groupData);
+                });
+                
+                $('#group-btn-input').keypress(function (e) {
+                    if (e.which === 13) {
+                        $(this).blur();
+                        $('#group-btn-chat').focus().click();
+                    }
+                });
+                
             });
 
             var chatUserNames = {}
@@ -337,6 +416,9 @@
                 window.location = "/upload_documents";
             }
 
+            function showGrouppopupChat() {
+                $('#groupPopupChat').modal('show')
+            }
         </script>
     </head>
 
@@ -579,7 +661,7 @@
 
                 <div class="well well-small">
                     <button class="btn btn-primary btn-block"> Private Chat</button>
-                    <button class="btn btn-success btn-block"> Group Chat</button>
+                    <button onclick="showGrouppopupChat();" class="btn btn-success btn-block"> Group Chat</button>
                     <button class="btn btn-info btn-block"> Open Chat </button>
                     <button onclick="showDocumentsMenu();" class="btn btn-danger btn-block"> Reference Materials </button>
                 </div>
@@ -644,7 +726,51 @@
                     </div>
                 </div>
             </div>
-    </body>
 
-    <!-- END BODY -->
+            <!----------------- GROUP CHAT------------------------------------->
+
+
+            <div class="modal fade" id="groupPopupChat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="H4"> GROUP CHAT for <b><%= group_name %></b> (<span style="border-radius: 50%;" class="label label-<%=group_color%>"><%= total_members %></span> Members)</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="chat-panel panel panel-success">
+                                <div class="panel-heading">
+                                    <i class="icon-comments"></i>
+                                    Group Chat Messages
+
+                                </div>
+
+                                <div class="panel-body group-chat">
+
+                                </div>
+
+                                <div class="panel-footer">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Type your comment here..." class="form-control input-sm" id="group-btn-input">
+                                        <span class="input-group-btn">
+                                            <button id="group-btn-chat" class="btn btn-success btn-sm">
+                                                Send
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!----------------- GROUP CHAT END ---------------------------------
+            </body>
+        
+            <!-- END BODY -->
 </html>

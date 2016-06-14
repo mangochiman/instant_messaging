@@ -68,6 +68,8 @@ router.get('/index', loadUser, function (req, res, next) {
     knex('group_membership').where({user_id: user.user_id}).then(function (group_membership) {
         knex('group').where({group_id: group_membership[0].group_id}).then(function (g) {
             group_color = g[0].color;
+            my_group_id = g[0].group_id;
+            my_group_name = g[0].name;
             knex('group').then(function (groups) {
                 var promises = groups.map(function (group) {
                     group_id = group.group_id;
@@ -89,7 +91,7 @@ router.get('/index', loadUser, function (req, res, next) {
 
                 return Promise.all(promises2)
             }).then(function (data) {
-                res.render('index', {groups: data, user: user, group_color: group_color, uploaded_files: uploadedFiles, current_user: user});
+                res.render('index', {groups: data, user: user, group_color: group_color, uploaded_files: uploadedFiles, current_user: user, group_id: my_group_id, group_name: my_group_name});
             });
         })
 
