@@ -45,15 +45,17 @@ function buildPrivateChat(data) {
         chatID = chatData.chat_id;
     }
 
+    if (recepient === originalUserName){
+        recepient = data.sender;
+    }
     private_messages = privateMessages[chatID];
-
     html = '<div class="private-chat ' + chatID + '" id=' + chatID + '>';
     html += '<div class="row chat-window col-xs-5 col-md-3 chat_window">';
     html += '<div class="col-xs-12 col-md-12">';
     html += '<div class="panel panel-default">';
     html += '<div class="panel-heading top-bar">';
     html += '<div class="col-md-8 col-xs-8">';
-    html += '<h3 class="panel-title"><i class="icon-circle userid header_' + chatID + '" style="color: green;"></i> ' + currentusername + '</h3>';
+    html += '<h3 class="panel-title"><i class="icon-circle userid header_' + chatID + '" style="color: green;"></i> ' + recepient + '</h3>';
     html += '</div>';
     html += '<div class="col-md-4 col-xs-4" style="text-align: right;">';
     html += '<span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span>';
@@ -125,6 +127,7 @@ function buildPrivateChat(data) {
             $('#btn_' + chatID).focus().click();
         }
     });
+    
 }
 
 function resetPositions() {
